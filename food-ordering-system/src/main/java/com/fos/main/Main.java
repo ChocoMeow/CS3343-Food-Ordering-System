@@ -1,8 +1,8 @@
-package src.main;
+package com.fos.main;
 
-import src.factories.CommandFactory;
-import src.invokers.CommandInvoker;
-import src.commands.Command;
+import com.fos.factories.CommandFactory;
+import com.fos.invokers.CommandInvoker;
+import com.fos.commands.Command;
 
 import java.util.List;
 import java.util.Scanner;
