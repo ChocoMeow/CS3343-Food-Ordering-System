@@ -1,4 +1,4 @@
-package src.commands;
+package com.fos.commands;
 
 public class ConcreteCommandA implements Command {
     @Override

@@ -1,8 +1,8 @@
-package src.factories;
+package com.fos.factories;
 
-import src.commands.Command;
-import src.commands.ConcreteCommandA;
-import src.commands.ConcreteCommandB;
+import com.fos.commands.Command;
+import com.fos.commands.ConcreteCommandA;
+import com.fos.commands.ConcreteCommandB;
 
 import java.util.Collection;
 import java.util.HashMap;

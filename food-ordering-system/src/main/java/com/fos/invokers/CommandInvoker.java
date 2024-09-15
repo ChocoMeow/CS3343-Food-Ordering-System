@@ -1,6 +1,6 @@
-package src.invokers;
+package com.fos.invokers;
 
-import src.commands.Command;
+import com.fos.commands.Command;
 
 import java.util.ArrayList;
 import java.util.List;
