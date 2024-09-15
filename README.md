@@ -6,13 +6,7 @@
 mvn clean install
 ```
 
-<p>2. Make the Package (.jar) </p>
-
-```
-mvn package
-```
-
-<p>3. Run the .jar</p>
+<p>2. Run the .jar</p>
 
 ```
 java -jar target\food-ordering-system-1.0-SNAPSHOT.jar 
