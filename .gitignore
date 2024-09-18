@@ -2,3 +2,5 @@
 .project
 .settings/
 target/
+food-ordering-system/dependency-reduced-pom.xml
+food-ordering-system/pom.xml
