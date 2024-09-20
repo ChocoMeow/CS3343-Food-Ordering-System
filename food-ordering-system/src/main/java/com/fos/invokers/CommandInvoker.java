@@ -18,16 +18,6 @@ public class CommandInvoker {
         }
     }
 
-    public void undo() {
-        if (!commandHistory.isEmpty()) {
-            Command command = commandHistory.remove(commandHistory.size() - 1);
-            command.undo();
-            redoStack.push(command);
-        } else {
-            System.out.println("No commands to undo.");
-        }
-    }
-
     public void redo() {
         if (!redoStack.isEmpty()) {
             Command command = redoStack.pop();
