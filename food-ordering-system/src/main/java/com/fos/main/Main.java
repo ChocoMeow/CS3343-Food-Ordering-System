@@ -7,18 +7,13 @@ import com.fos.commands.Command;
 import com.fos.Tasks.TaskPool;
 import com.fos.Tasks.Task;
 
-import com.fos.foods.Food;
-import com.fos.drinks.Drink;
-
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Main {
 
-    public static Task foodQueueTask = TaskPool.getTask("main");
-    public static ArrayList<Food> foodQueue = new ArrayList<Food>();
-    public static ArrayList<Drink> drinkQueue = new ArrayList<Drink>();
+    public static ArrayList<Order> orders = new ArrayList<Order>();
 
     public static void main(String[] args) {
         CommandFactory commandFactory = new CommandFactory();
@@ -28,7 +23,11 @@ public class Main {
         List<Command> commands = new ArrayList<>(commandFactory.getAllCommands());
         
         Config config = Config.loadConfig();
+        Kitchen.addNewChef(config.getChefNum());
+        Kitchen.addNewBartender(config.getBartenderNum());
 
+        // Task foodQueueTask = TaskPool.getTask("main");
+        // foodQueueTask.start();
         while (true) {
             System.out.println("Menu:");
             for (int i = 0; i < commands.size(); i++) {

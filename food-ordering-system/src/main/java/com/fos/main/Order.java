@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import com.fos.drinks.Drink;
 import com.fos.foods.Food;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public abstract class Order {
 
     private ArrayList<Food> foods;
@@ -14,8 +21,8 @@ public abstract class Order {
 
     private LocalDateTime createdTime;
 
-    private int status = 0;
-    private int type = 0;
+    private boolean isCancelled = false;
+    private boolean isEmergency = false;
 
     private Member customer;
 
@@ -23,36 +30,9 @@ public abstract class Order {
         this.foods = foods;
         this.drinks = drinks;
         this.customer = customer;
-        
         this.createdTime = LocalDateTime.now();
     }
 
-    public void updateStatus(int status) {
-        if (status < 0 || status > 3) {
-            new Exception("Invalid status code. Please enter a number between 0 and 3!");
-        }
-        this.status = status;
-    }
-
-    public void updateType(int type) {
-        if (status < 1 || status > 2) {
-            new Exception("Invalid type code. Please enter a number 0 or 1!");
-        }
-        this.type = type;
-    }
-
-    public ArrayList<Food> getFoods() {
-        return foods;
-    }
-
-    public ArrayList<Drink> getDrinks() {
-        return drinks;
-    }
-
-    public Member getCustomer() {
-        return this.customer;
-    }
-    
     public double getTotalPrice() {
         double totalPrice = 0;
 
@@ -68,34 +48,70 @@ public abstract class Order {
         return totalPrice;
     }
 
-    public String getStatus() {
-        switch (this.status) {
-            case 1:
-                return "In Progress";
-
-            case 2:
-                return "Cancelled";
-
-            case 3:
-                return "Completed";
-
-            default:
-                return "Pending";
+    public Food getPendingFoodItem() {
+        for (Food food : foods) {
+            if (food.isPending()) {
+                return food;
+            }
         }
+        return null;
     }
 
-    public String getType() {
-        switch (this.type) {
-            case 1:
-                return "Emergency";
-        
-            default:
-                return "Normal";
+    public Drink getPendingDrinkItem() {
+        for (Drink drink : drinks) {
+            if (drink.isPending()) {
+                return drink;
+            }
         }
+        return null;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return this.createdTime;
+    public String getFoodStatus() {
+        if (isCancelled)
+            return "Cancelled";
+
+        boolean allPending = true;
+        boolean allCompleted = true;
+
+        for (Food food : foods) {
+            if (food.isPending())
+                allCompleted = false; // Found a pending item
+            else
+                allPending = false; // Found a completed item
+        }
+
+        if (allPending)
+            return "Pending";
+        else if (allCompleted)
+            return "Completed";
+        else
+            return "In Progress";
+    }
+
+    public String getDrinkStatus() {
+        if (isCancelled)
+            return "Cancelled";
+
+        boolean allPending = true;
+        boolean allCompleted = true;
+
+        for (Drink drink : drinks) {
+            if (drink.isPending())
+                allCompleted = false; // Found a pending item
+            else
+                allPending = false; // Found a completed item
+        }
+
+        if (allPending)
+            return "Pending";
+        else if (allCompleted)
+            return "Completed";
+        else
+            return "In Progress";
+    }
+
+    public boolean isOrderCompleted() {
+        return getFoodStatus() == "Completed" && getDrinkStatus() == "Completed";
     }
 
     public double getExceptedTime() {
