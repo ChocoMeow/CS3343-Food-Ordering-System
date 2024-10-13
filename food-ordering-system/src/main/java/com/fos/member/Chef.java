@@ -1,32 +1,47 @@
 package com.fos.member;
 
-import com.fos.foods.Food;
+import com.fos.item.Food;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@ToString
-public class Chef extends Member {
-    private Food processFood;
+public class Chef {
+    private final String name;
+    private Food currentFood;
+    private boolean isBusy = false;
+    private long cookingStartTime;
 
     public Chef(String name) {
-        super(name);
+        this.name = name;
     }
 
-    public boolean isAvailable() {
-        return processFood == null;
+    public void cook(Food food) {
+        isBusy = true;
+        currentFood = food;
+        cookingStartTime = System.currentTimeMillis();
+
+        // Start cooking in a separate thread
+        new Thread(() -> {
+            food.cook(); // This will now run in its own thread
+            isBusy = false; // Set busy back to false after cooking
+            currentFood = null; // Reset after cooking
+        }).start();
     }
 
-    public void assign(Food food) {
-        this.processFood = food;
+    public boolean isBusy() {
+        return isBusy;
     }
 
-    @Override
-    public String getType() {
-        return "Cherf";
+    public String getName() {
+        return name;
     }
-    
+
+    public Food getCurrentFood() {
+        return currentFood;
+    }
+
+    public long getRemainingCookingTime() {
+        if (currentFood != null) {
+            long elapsed = (System.currentTimeMillis() - cookingStartTime) / 1000;
+            return Math.max(currentFood.getCookingTime() - elapsed, 0);
+        }
+        return 0;
+    }
 }

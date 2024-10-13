@@ -1,7 +1,7 @@
-package com.fos.Tasks;
+package com.fos.Task;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public abstract class Task {
@@ -16,9 +16,7 @@ public abstract class Task {
     }
 
     public void start() {
-        this.scheduler.scheduleAtFixedRate(() -> {
-            this.execute();
-        }, this.initialDelay, period, TimeUnit.SECONDS);
+        this.scheduler.scheduleAtFixedRate(this::execute, this.initialDelay, period, TimeUnit.SECONDS);
     }
 
     public void stop() {

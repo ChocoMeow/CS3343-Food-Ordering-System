@@ -1,120 +1,51 @@
 package com.fos.main;
 
-import java.lang.reflect.Member;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 
-import com.fos.drinks.Drink;
-import com.fos.foods.Food;
+import com.fos.item.Drink;
+import com.fos.item.Food;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+class Order {
+    private final List<Food> foods;
+    private final List<Drink> drinks;
+    private final long orderTime;
 
-@Getter
-@Setter
-@ToString
-public abstract class Order {
-
-    private ArrayList<Food> foods;
-    private ArrayList<Drink> drinks;
-
-    private LocalDateTime createdTime;
-
-    private boolean isCancelled = false;
-    private boolean isEmergency = false;
-
-    private Member customer;
-
-    public Order(ArrayList<Food> foods, ArrayList<Drink> drinks, Member customer) {
-        this.foods = foods;
-        this.drinks = drinks;
-        this.customer = customer;
-        this.createdTime = LocalDateTime.now();
+    public Order() {
+        this.foods = new ArrayList<>();
+        this.drinks = new ArrayList<>();
+        this.orderTime = System.currentTimeMillis();
     }
 
-    public double getTotalPrice() {
-        double totalPrice = 0;
-
-        // Loop through foods and add their prices
-        for (Food food : foods) {
-            totalPrice += food.getPrice();
-        }
-
-        // Loop through drinks and add their prices
-        for (Drink drink : drinks) {
-            totalPrice += drink.getPrice();
-        }
-        return totalPrice;
+    public void addFood(Food food) {
+        foods.add(food);
     }
 
-    public Food getPendingFoodItem() {
-        for (Food food : foods) {
-            if (food.isPending()) {
-                return food;
-            }
-        }
-        return null;
+    public void addDrink(Drink drink) {
+        drinks.add(drink);
     }
 
-    public Drink getPendingDrinkItem() {
-        for (Drink drink : drinks) {
-            if (drink.isPending()) {
-                return drink;
-            }
-        }
-        return null;
+    public List<Food> getFoods() {
+        return foods;
     }
 
-    public String getFoodStatus() {
-        if (isCancelled)
-            return "Cancelled";
-
-        boolean allPending = true;
-        boolean allCompleted = true;
-
-        for (Food food : foods) {
-            if (food.isPending())
-                allCompleted = false; // Found a pending item
-            else
-                allPending = false; // Found a completed item
-        }
-
-        if (allPending)
-            return "Pending";
-        else if (allCompleted)
-            return "Completed";
-        else
-            return "In Progress";
+    public List<Drink> getDrinks() {
+        return drinks;
     }
 
-    public String getDrinkStatus() {
-        if (isCancelled)
-            return "Cancelled";
-
-        boolean allPending = true;
-        boolean allCompleted = true;
-
-        for (Drink drink : drinks) {
-            if (drink.isPending())
-                allCompleted = false; // Found a pending item
-            else
-                allPending = false; // Found a completed item
-        }
-
-        if (allPending)
-            return "Pending";
-        else if (allCompleted)
-            return "Completed";
-        else
-            return "In Progress";
+    public long getOrderTime() {
+        return orderTime;
     }
 
-    public boolean isOrderCompleted() {
-        return getFoodStatus() == "Completed" && getDrinkStatus() == "Completed";
+    public long getExpectedFinishTime() {
+        long totalCookingTime = foods.stream().filter(f -> !f.isInStock()).mapToLong(Food::getCookingTime).sum();
+        return orderTime + totalCookingTime * 1000;
     }
 
-    public double getExceptedTime() {
-        return 0.0;
+    public long getWaitingTime() {
+        return (System.currentTimeMillis() - orderTime) / 1000;
+    }
+
+    public boolean isEmergency() {
+        return getWaitingTime() > 180; // More than 3 minutes
     }
 }
