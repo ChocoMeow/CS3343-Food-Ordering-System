@@ -1,104 +1,51 @@
 package com.fos.main;
 
-import java.lang.reflect.Member;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 
-import com.fos.drinks.Drink;
-import com.fos.foods.Food;
+import com.fos.item.Drink;
+import com.fos.item.Food;
 
-public abstract class Order {
+class Order {
+    private final List<Food> foods;
+    private final List<Drink> drinks;
+    private final long orderTime;
 
-    private ArrayList<Food> foods;
-    private ArrayList<Drink> drinks;
-
-    private LocalDateTime createdTime;
-
-    private int status = 0;
-    private int type = 0;
-
-    private Member customer;
-
-    public Order(ArrayList<Food> foods, ArrayList<Drink> drinks, Member customer) {
-        this.foods = foods;
-        this.drinks = drinks;
-        this.customer = customer;
-        
-        this.createdTime = LocalDateTime.now();
+    public Order() {
+        this.foods = new ArrayList<>();
+        this.drinks = new ArrayList<>();
+        this.orderTime = System.currentTimeMillis();
     }
 
-    public void updateStatus(int status) {
-        if (status < 0 || status > 3) {
-            new Exception("Invalid status code. Please enter a number between 0 and 3!");
-        }
-        this.status = status;
+    public void addFood(Food food) {
+        foods.add(food);
     }
 
-    public void updateType(int type) {
-        if (status < 1 || status > 2) {
-            new Exception("Invalid type code. Please enter a number 0 or 1!");
-        }
-        this.type = type;
+    public void addDrink(Drink drink) {
+        drinks.add(drink);
     }
 
-    public ArrayList<Food> getFoods() {
+    public List<Food> getFoods() {
         return foods;
     }
 
-    public ArrayList<Drink> getDrinks() {
+    public List<Drink> getDrinks() {
         return drinks;
     }
 
-    public Member getCustomer() {
-        return this.customer;
-    }
-    
-    public double getTotalPrice() {
-        double totalPrice = 0;
-
-        // Loop through foods and add their prices
-        for (Food food : foods) {
-            totalPrice += food.getPrice();
-        }
-
-        // Loop through drinks and add their prices
-        for (Drink drink : drinks) {
-            totalPrice += drink.getPrice();
-        }
-        return totalPrice;
+    public long getOrderTime() {
+        return orderTime;
     }
 
-    public String getStatus() {
-        switch (this.status) {
-            case 1:
-                return "In Progress";
-
-            case 2:
-                return "Cancelled";
-
-            case 3:
-                return "Completed";
-
-            default:
-                return "Pending";
-        }
+    public long getExpectedFinishTime() {
+        long totalCookingTime = foods.stream().filter(f -> !f.isInStock()).mapToLong(Food::getCookingTime).sum();
+        return orderTime + totalCookingTime * 1000;
     }
 
-    public String getType() {
-        switch (this.type) {
-            case 1:
-                return "Emergency";
-        
-            default:
-                return "Normal";
-        }
+    public long getWaitingTime() {
+        return (System.currentTimeMillis() - orderTime) / 1000;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return this.createdTime;
-    }
-
-    public double getExceptedTime() {
-        return 0.0;
+    public boolean isEmergency() {
+        return getWaitingTime() > 180; // More than 3 minutes
     }
 }

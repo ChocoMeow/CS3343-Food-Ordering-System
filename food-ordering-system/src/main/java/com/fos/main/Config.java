@@ -24,7 +24,7 @@ public class Config {
     private int chefNum;
 
     @SerializedName("BARTENDER_NUM")
-    private double bartenderNum;
+    private int bartenderNum;
 
     @SerializedName("BATCH_JOB_PER_TIME")
     private double batchJobPerTime;
