@@ -1,13 +1,19 @@
 package com.fos.main;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import com.fos.Task.Task;
 import com.fos.item.Drink;
 import com.fos.item.Food;
 import com.fos.member.Bartender;
 import com.fos.member.Chef;
-import com.fos.Task.Task;
-
-import java.util.*;
-import java.text.SimpleDateFormat;
 
 public class Main {
     private static Kitchen kitchen;
@@ -274,7 +280,7 @@ public class Main {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
-    private static String formatTimeLeft(long millis) {
+    public static String formatTimeLeft(long millis) {
         long totalSeconds = millis / 1000;
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;

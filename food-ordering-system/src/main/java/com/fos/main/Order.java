@@ -1,11 +1,12 @@
 package com.fos.main;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fos.item.Drink;
 import com.fos.item.Food;
 
-class Order {
+public class Order {
     private final List<Food> foods;
     private final List<Drink> drinks;
     private final long orderTime;

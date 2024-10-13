@@ -15,6 +15,10 @@ public class Food {
         return name;
     }
 
+    public int getStock(){
+        return stock;
+    }
+
     public int getCookingTime() {
         return cookingTime;
     }
