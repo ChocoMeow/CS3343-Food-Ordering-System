@@ -46,5 +46,6 @@ public class Food {
         }
         restock(); // Add back to stock after cooking
         // System.out.printf("%s is ready and added to stock!%n", name);
+        use();
     }
 }

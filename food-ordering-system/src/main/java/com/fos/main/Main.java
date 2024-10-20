@@ -228,7 +228,9 @@ public class Main {
         for (Bartender bartender : kitchen.getBartenders()) {
             Drink currentDrink = bartender.getCurrentDrink();
             if (currentDrink != null) {
-                System.out.printf("%-15s %s%n", bartender.getName(), "Mixing " + currentDrink.getName());
+                long remainingTime = bartender.getRemainingMixingTime();
+                System.out.printf("%-15s %s %-15s%n", bartender.getName(), "Mixing " + currentDrink.getName(),
+                        formatTime(remainingTime));
             } else {
                 System.out.printf("%-15s %s%n", bartender.getName(), "Free");
             }
