@@ -1,5 +1,8 @@
 package com.fos.item;
 
+import lombok.ToString;
+
+@ToString
 public class Drink {
     private final String name;
     private float price;
