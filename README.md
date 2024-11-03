@@ -4,6 +4,8 @@
 
 ```
 mvn clean install
+OR
+mvn clean install -DskipTests # Bypass until tests
 ```
 
 <p>2. Run the .jar</p>
