@@ -1,5 +1,8 @@
 package com.fos.item;
 
+import lombok.ToString;
+
+@ToString
 public class Food {
     private final String name;
     private final int cookingTime;

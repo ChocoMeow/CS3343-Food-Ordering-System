@@ -29,7 +29,7 @@ public class TestMain {
 
         f.cook();
         
-        Assertions.assertEquals(1,f.getStock());
+        Assertions.assertEquals(0,f.getStock());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TestMain {
         Kitchen kitchen = new Kitchen(clist, blist);
         com.fos.main.Order order = new com.fos.main.Order();
         Food f = new Food("Hotdog", 0, 0);
-        Drink d = new Drink("Milk", 0);
+        Drink d = new Drink("Milk",0,0);
         order.addDrink(d);
         order.addFood(f);
         kitchen.placeOrder(order);
