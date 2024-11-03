@@ -1,8 +1,10 @@
 package com.fos.main;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.fos.item.Drink;
 import com.fos.item.Food;
@@ -21,6 +23,9 @@ public class Kitchen {
     private List<Food> availableFoods;
     private List<Drink> availableDrinks;
 
+    private List<Food> completedFoods = new ArrayList<>();
+    private List<Drink> completedDrinks = new ArrayList<>();
+
     public Kitchen(List<Chef> chefs, List<Bartender> bartenders) {
         this.chefs = chefs;
         this.bartenders = bartenders;
@@ -32,7 +37,7 @@ public class Kitchen {
                 new Food("apple", 5, 0));
         
         this.availableDrinks = Arrays.asList(
-            new Drink("Cocktail", 10,0),
+            new Drink("Cocktail", 40,0),
             new Drink("Soda", 20, 0)
         );
     }
@@ -43,55 +48,72 @@ public class Kitchen {
     }
 
     public void processOrders() {
-        ExecutorService chefExecutor = Executors.newFixedThreadPool(1); // Adjust the number of threads as needed
-        ExecutorService bartenderExecutor = Executors.newFixedThreadPool(1); // Adjust the number of threads as needed
+        ExecutorService chefExecutor = Executors.newFixedThreadPool(1);
+        ExecutorService bartenderExecutor = Executors.newFixedThreadPool(1);
 
         while (!orders.isEmpty()) {
+            completedFoods.clear();
+            completedDrinks.clear();
             this.processingOrder = orders.poll();
             if (this.processingOrder != null) {
+                List<Future<?>> futures = new ArrayList<>();
+
+                // Process foods
                 for (Food food : this.processingOrder.getFoods()) {
-                    chefExecutor.submit(() -> {
-                        Chef chef = findAvailableChef();
-
-                        // Wait for an available chef if none are available
-                        while (chef == null) {
-                            try {
-                                Thread.sleep(1000); // Wait for a second before checking again
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
+                    futures.add(chefExecutor.submit(() -> {
+                        try {
+                            Chef chef = findAvailableChef();
+                            while (chef == null) {
+                                Thread.sleep(1000);
+                                chef = findAvailableChef();
                             }
-                            chef = findAvailableChef(); // Check again for available chef
+                            if (food.isInStock()) {
+                                food.use();
+                            } else {
+                                chef.cook(food);
+                            }
+                            completedFoods.add(food);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        } catch (Exception e) {
+                            // Handle exceptions appropriately
+                            e.printStackTrace();
                         }
-
-                        if (food.isInStock()) {
-                            food.use(); // Use stock instead of cooking
-                        } else {
-                            chef.cook(food); // Start cooking if not in stock
-                        }
-                    });
+                    }));
                 }
 
+                // Process drinks
                 for (Drink drink : this.processingOrder.getDrinks()) {
-                    bartenderExecutor.submit(() -> {
-                        System.out.print("Finding Bartender");
-                        Bartender bartender = findAvailableBartender(); // Using the first bartender for simplicity
-                        System.out.print("Finding Bartender 2");
-                        while (bartender == null) {
-                            try {
-                                Thread.sleep(1000); // Wait for a second before checking again
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
+                    futures.add(bartenderExecutor.submit(() -> {
+                        try {
+                            Bartender bartender = findAvailableBartender();
+                            while (bartender == null) {
+                                Thread.sleep(1000);
+                                bartender = findAvailableBartender();
                             }
-                            bartender = findAvailableBartender(); // Check again for available bartender
-                            System.out.println("Bartender Found");
+                            if (drink.isInStock()) {
+                                drink.use();
+                            } else {
+                                bartender.mix(drink);
+                            }
+                            completedDrinks.add(drink);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        } catch (Exception e) {
+                            // Handle exceptions appropriately
+                            e.printStackTrace();
                         }
+                    }));
+                }
 
-                        if (drink.isInStock()) {
-                            drink.use(); // Use stock instead of mixing
-                        } else {
-                            bartender.mix(drink);
-                        }
-                    });
+                // Wait for all tasks to finish before moving to the next order
+                for (Future<?> future : futures) {
+                    try {
+                        future.get(); // This will block until the task is complete
+                    } catch (InterruptedException | ExecutionException e) {
+                        // Handle exceptions appropriately
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -145,5 +167,13 @@ public class Kitchen {
 
     public List<Drink> getAvailableDrinks() {
         return availableDrinks;
+    }
+
+    public List<Food> getCompletedFoods() {
+        return completedFoods;
+    }
+
+    public List<Drink> getCompletedDrinks() {
+        return completedDrinks;
     }
 }
