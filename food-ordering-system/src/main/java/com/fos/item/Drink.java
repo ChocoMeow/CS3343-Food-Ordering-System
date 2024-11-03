@@ -34,7 +34,7 @@ public class Drink {
     }
 
     public void restock() {
-        stock ++;
+        stock++;
     }
 
     public void mix() {

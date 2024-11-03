@@ -1,6 +1,7 @@
 package com.fos.member;
 
 import com.fos.item.Drink;
+import com.fos.item.Food;
 
 public class Bartender {
     private final String name;
@@ -11,7 +12,7 @@ public class Bartender {
     public Bartender(String name) {
         this.name = name;
     }
-
+    
     public void mix(Drink drink) {
         isBusy = true;
         currentDrink = drink;
@@ -20,12 +21,9 @@ public class Bartender {
         // Start mixing in a separate thread and wait for it to finish
         new Thread(() -> {
             drink.mix();
-            isBusy = false;
-            currentDrink = null;
+            isBusy = false; // Set busy back to false after mixing
+            currentDrink = null; // Reset after mixing
         }).start();
-
-        isBusy = false;  // Set busy back to false after mixing
-        currentDrink = null; // Reset after mixing
     }
 
     public boolean isBusy() {
