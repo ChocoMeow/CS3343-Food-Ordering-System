@@ -1,4 +1,4 @@
-package com.fos.member;
+package com.fos.worker;
 
 import com.fos.item.Food;
 

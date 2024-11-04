@@ -8,8 +8,8 @@ import java.util.concurrent.Future;
 
 import com.fos.item.Drink;
 import com.fos.item.Food;
-import com.fos.member.Bartender;
-import com.fos.member.Chef;
+import com.fos.worker.Bartender;
+import com.fos.worker.Chef;
 
 public class Kitchen {
     private final List<Chef> chefs;

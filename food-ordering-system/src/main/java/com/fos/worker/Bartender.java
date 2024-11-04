@@ -1,7 +1,6 @@
-package com.fos.member;
+package com.fos.worker;
 
 import com.fos.item.Drink;
-import com.fos.item.Food;
 
 public class Bartender {
     private final String name;
