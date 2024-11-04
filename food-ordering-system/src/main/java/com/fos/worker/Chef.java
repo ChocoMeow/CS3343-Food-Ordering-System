@@ -7,6 +7,7 @@ public class Chef {
     private Food currentFood;
     private boolean isBusy = false;
     private long cookingStartTime;
+    private int totalHandledFoods = 0;
 
     public Chef(String name) {
         this.name = name;
@@ -22,6 +23,7 @@ public class Chef {
             food.cook(); // This will now run in its own thread
             isBusy = false; // Set busy back to false after cooking
             currentFood = null; // Reset after cooking
+            totalHandledFoods++;
         }).start();
     }
 
@@ -44,4 +46,9 @@ public class Chef {
         }
         return 0;
     }
+
+    public int getTotalHandledFoods() {
+        return totalHandledFoods;
+    }
+
 }

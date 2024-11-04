@@ -2,17 +2,23 @@ package com.fos.item;
 
 public class Food {
     private final String name;
+    private final float price;
     private final int cookingTime;
     private int stock;
 
-    public Food(String name, int cookingTime, int stock) {
+    public Food(String name, float price, int cookingTime, int stock) {
         this.name = name;
+        this.price = price;
         this.cookingTime = cookingTime;
         this.stock = stock;
     }
 
     public String getName() {
         return name;
+    }
+
+    public float getPrice() {
+        return price;
     }
 
     public int getStock(){

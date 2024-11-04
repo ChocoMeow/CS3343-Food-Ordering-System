@@ -1,4 +1,4 @@
-package com.fos.factories;
+package com.fos.main;
 
 import com.fos.commands.Command;
 import com.fos.commands.*;
@@ -13,6 +13,7 @@ public class CommandFactory {
     public CommandFactory() {
         commandMap.put(1, new CreateOrderCommand());
         commandMap.put(2, new ViewKitchenProcesses());
+        commandMap.put(3, new CreateReport());
     }
 
     public Command getCommand(int commandNumber) {

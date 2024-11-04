@@ -39,7 +39,6 @@ public class ViewKitchenProcesses extends Command {
 
         // Wait for user input to exit
         while (true) {
-            System.out.println("Press 'e' to exit view...");
             String input = scanner.nextLine();
             if (input.equalsIgnoreCase("e")) {
                 refreshThread.interrupt(); // Stop the refresh thread
@@ -57,23 +56,28 @@ public class ViewKitchenProcesses extends Command {
         System.out.println("\nCurrent Kitchen Processes:");
         System.out.printf("%-20s %-15s %-15s %-20s %-20s%n", "Order Time", "Waiting Time", "Expected Finish", "Details", "Pending Items");
         System.out.println("------------------------------------------------------------------------------------------------");
-    
-        List<Order> emergencyOrders = new ArrayList<>();
-        List<Order> normalOrders = new ArrayList<>();
-    
-        for (Order order : kitchen.getOrders()) {
-            if (order.isEmergency()) {
-                emergencyOrders.add(order);
-            } else {
-                normalOrders.add(order);
+        
+        if (kitchen.getOrders().isEmpty()) {
+            System.out.println("There is currently no order queued!");
+
+        } else {
+            List<Order> emergencyOrders = new ArrayList<>();
+            List<Order> normalOrders = new ArrayList<>();
+        
+            for (Order order : kitchen.getOrders()) {
+                if (order.isEmergency()) {
+                    emergencyOrders.add(order);
+                } else {
+                    normalOrders.add(order);
+                }
             }
+        
+            // Process emergency orders first
+            processOrdersList(emergencyOrders);
+        
+            // Process normal orders
+            processOrdersList(normalOrders);
         }
-    
-        // Process emergency orders first
-        processOrdersList(emergencyOrders);
-    
-        // Process normal orders
-        processOrdersList(normalOrders);
     
         System.out.println("------------------------------------------------------------------------------------------------");
         
@@ -88,16 +92,36 @@ public class ViewKitchenProcesses extends Command {
     
         // Show bartender activity
         displayBartenderActivities();
+
+        System.out.print("\nPress 'e' to exit view...");
     }
 
     private void displayCurrentOrderDetails(Order currentOrder) {
-        System.out.printf("%n%-15s %-15s%n", "Completed Foods", "Completed Drinks");
+        if (currentOrder == null) {
+            return;
+        }
+    
+        System.out.printf("%n%-15s%n", "Completed Foods and Drinks");
         System.out.println("-------------------------------------");
     
-        // Display completed foods
-        System.out.printf("%-15s %-15s%n", 
-                       kitchen.getCompletedFoods().isEmpty() ? "None" : String.join(", ", kitchen.getCompletedFoods().stream().map(Food::getName).toArray(String[]::new)),
-                       kitchen.getCompletedDrinks().isEmpty() ? "None" : String.join(", ", kitchen.getCompletedDrinks().stream().map(Drink::getName).toArray(String[]::new)));
+        displayItems(currentOrder.getFoods(), kitchen.getProcessingFoodIndex());
+        displayItems(currentOrder.getDrinks(), kitchen.getProcessingDrinkIndex());
+    }
+    
+    private <T> void displayItems(List<T> items, int processingIndex) {
+        for (int i = 0; i < items.size(); i++) {
+            T item = items.get(i);
+            if (i < processingIndex - 1) {
+                System.out.print("[✔]");
+            } else if (i == processingIndex - 1) {
+                System.out.print("[↺]");
+            } else {
+                System.out.print("[ ]");
+            }
+            System.out.print(item instanceof Food ? ((Food) item).getName() : ((Drink) item).getName());
+            System.out.print(", ");
+        }
+        System.out.println();
     }
 
     private void processOrdersList(List<Order> orders) {
@@ -127,38 +151,40 @@ public class ViewKitchenProcesses extends Command {
             }
     
             System.out.printf("%-20s %-15s %-15s %-20s %-20s%n",
-                    Utils.formatDate(order.getOrderTime()),
-                    Utils.formatTime(waitingTime),
-                    Utils.formatTimeLeft(timeLeft),
-                    details.toString().trim(),
-                    pendingItems.trim());
+                Utils.formatDate(order.getOrderTime()),
+                Utils.formatTime(waitingTime),
+                Utils.formatTimeLeft(timeLeft),
+                details.toString().trim(),
+                pendingItems.trim()
+            );
         }
     }
 
     private void displayChefActivities() {
         System.out.printf("%n%-15s %-25s %-15s%n", "Chef", "Current Task", "Time Left");
-        System.out.println("-----------------------------------------------");
+        System.out.println("--------------------------------------------------");
         for (Chef chef : kitchen.getChefs()) {
             Food currentFood = chef.getCurrentFood();
             if (currentFood != null) {
                 long remainingTime = chef.getRemainingCookingTime();
-                System.out.printf("%-15s %s %-15s%n", chef.getName(), "Cooking " + currentFood.getName(), Utils.formatTime(remainingTime));
+                System.out.printf("%-15s %-25s %-15s%n", chef.getName(), "Cooking " + currentFood.getName(), Utils.formatTime(remainingTime));
             } else {
-                System.out.printf("%-15s %s %-15s%n", chef.getName(), "Free", "N/A");
+                System.out.printf("%-15s %-25s %-15s%n", chef.getName(), "Free", "N/A");
             }
         }
     }
     
     private void displayBartenderActivities() {
         System.out.printf("%n%-15s %-25s %-15s%n", "Bartender", "Current Task", "Time Left");
-        System.out.println("-------------------------------------------");
+        System.out.println("--------------------------------------------------");
+        
         for (Bartender bartender : kitchen.getBartenders()) {
             Drink currentDrink = bartender.getCurrentDrink();
             if (currentDrink != null) {
                 long remainingTime = bartender.getRemainingMixingTime();
-                System.out.printf("%-15s %s %-15s%n", bartender.getName(), "Mixing " + currentDrink.getName(), Utils.formatTime(remainingTime));
+                System.out.printf("%-15s %-25s %-15s%n", bartender.getName(), "Mixing " + currentDrink.getName(), Utils.formatTime(remainingTime));
             } else {
-                System.out.printf("%-15s %s %-15s%n", bartender.getName(), "Free", "N/A");
+                System.out.printf("%-15s %-25s %-15s%n", bartender.getName(), "Free", "N/A");
             }
         }
     }

@@ -17,34 +17,38 @@ public class Kitchen {
     private final Queue<Order> orders;
     private Order processingOrder = null;
 
+    private int totalHandledOrder = 0;
+    private float totalProfit = 0;
+
     private int lastChefIndex = 0; // Track the last assigned chef
     private int lastBartenderIndex = 0; // Track the last assigned bartender
 
+    private int processingFoodIndex = 0;
+    private int processingDrinkIndex = 0;
+    private long totalWaitingTime = 0;
+
     private List<Food> availableFoods;
     private List<Drink> availableDrinks;
-
-    private List<Food> completedFoods = new ArrayList<>();
-    private List<Drink> completedDrinks = new ArrayList<>();
 
     public Kitchen(List<Chef> chefs, List<Bartender> bartenders) {
         this.chefs = chefs;
         this.bartenders = bartenders;
         this.orders = new LinkedList<>();
         this.availableFoods = Arrays.asList(
-                new Food("Pasta", 20, 0),
-                new Food("Hotdog", 35, 0),
-                new Food("ice-cream", 15, 0),
-                new Food("apple", 5, 0));
+            new Food("Pasta", 25, 20, 0),
+            new Food("Hotdog", 30, 35, 0),
+            new Food("ice-cream", 20, 15, 0),
+            new Food("apple", 5, 3, 0)
+        );
         
         this.availableDrinks = Arrays.asList(
-            new Drink("Cocktail", 40,0),
-            new Drink("Soda", 20, 0)
+            new Drink("Cocktail", 20, 40, 0),
+            new Drink("Soda", 10, 20, 0)
         );
     }
 
     public void placeOrder(Order order) {
         orders.add(order);
-        // System.out.println("Order placed!");
     }
 
     public void processOrders() {
@@ -52,11 +56,15 @@ public class Kitchen {
         ExecutorService bartenderExecutor = Executors.newFixedThreadPool(1);
 
         while (!orders.isEmpty()) {
-            completedFoods.clear();
-            completedDrinks.clear();
+            processingFoodIndex = 0;
+            processingDrinkIndex = 0;
+            processingOrder = null;
+
             this.processingOrder = orders.poll();
             if (this.processingOrder != null) {
-                List<Future<?>> futures = new ArrayList<>();
+                totalWaitingTime += this.processingOrder.getWaitingTime();
+
+                List<Future<?>> futures = new ArrayList<>();    
 
                 // Process foods
                 for (Food food : this.processingOrder.getFoods()) {
@@ -72,7 +80,9 @@ public class Kitchen {
                             } else {
                                 chef.cook(food);
                             }
-                            completedFoods.add(food);
+                            totalProfit += food.getPrice();
+                            processingFoodIndex++;
+
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                         } catch (Exception e) {
@@ -96,7 +106,9 @@ public class Kitchen {
                             } else {
                                 bartender.mix(drink);
                             }
-                            completedDrinks.add(drink);
+                            totalProfit += drink.getPrice();
+                            processingDrinkIndex++;
+
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                         } catch (Exception e) {
@@ -115,7 +127,9 @@ public class Kitchen {
                         e.printStackTrace();
                     }
                 }
-            }
+                totalHandledOrder++;
+                processingOrder = null;
+            }   
         }
 
         // Shutdown the executors gracefully when done
@@ -169,11 +183,23 @@ public class Kitchen {
         return availableDrinks;
     }
 
-    public List<Food> getCompletedFoods() {
-        return completedFoods;
+    public int getProcessingFoodIndex() {
+        return processingFoodIndex;
     }
 
-    public List<Drink> getCompletedDrinks() {
-        return completedDrinks;
+    public int getProcessingDrinkIndex() {
+        return processingDrinkIndex;
+    }
+
+    public float getTotalProfit() {
+        return totalProfit;
+    }
+
+    public long getTotalWaitingTime() {
+        return totalWaitingTime;
+    }
+
+    public int getTotalHandledOrder() {
+        return totalHandledOrder;
     }
 }

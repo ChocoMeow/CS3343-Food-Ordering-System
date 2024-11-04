@@ -1,9 +1,8 @@
-package com.fos.invokers;
+package com.fos.main;
 
 import java.util.Scanner;
 
 import com.fos.commands.Command;
-import com.fos.main.Kitchen;
 
 public class CommandInvoker {
     public void executeCommand(Command command, Scanner scanner, Kitchen kitchen) {

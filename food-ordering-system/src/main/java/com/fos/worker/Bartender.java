@@ -7,6 +7,7 @@ public class Bartender {
     private Drink currentDrink;
     private boolean isBusy = false;
     private long mixingStartTime;
+    private int totalHandledDrinks = 0;
 
     public Bartender(String name) {
         this.name = name;
@@ -22,6 +23,7 @@ public class Bartender {
             drink.mix();
             isBusy = false; // Set busy back to false after mixing
             currentDrink = null; // Reset after mixing
+            totalHandledDrinks += 1;
         }).start();
     }
 
@@ -43,5 +45,9 @@ public class Bartender {
             return Math.max(currentDrink.getMixingTime() - elapsed, 0);
         }
         return 0;
+    }
+
+    public int getTotalHandledDrinks() {
+        return totalHandledDrinks;
     }
 }
