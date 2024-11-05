@@ -5,36 +5,31 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import com.fos.worker.Chef;
+import com.fos.item.Drink;
+import com.fos.item.Food;
+import com.fos.worker.Bartender;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
 @ToString
 public class Config {
-    public static final String configPath = "./food-ordering-system/src/main/resources/Configuration.json";
+    private static final String configPath = "./src/main/resources/Configuration.json";
 
-    @SerializedName("CHEF_NUM")
-    private int chefNum;
+    @SerializedName("CHEFS")
+    public ArrayList<Chef> chefs;
 
-    @SerializedName("BARTENDER_NUM")
-    private int bartenderNum;
+    @SerializedName("BARTENDERS")
+    private ArrayList<Bartender> bartenders;
 
-    @SerializedName("BATCH_JOB_PER_TIME")
-    private double batchJobPerTime;
-
-    @SerializedName("ORDER_DEQUEUE_THRESHOLD")
-    private double orderDequeueThreshold;
-
-    @SerializedName("ORDER_INTERVAL_CONFIG")
-    private double orderIntervalConfig;
-
+    @SerializedName("ITEMS")
+    private Items items;
+    
     public static Config loadConfig() {
         Gson gson = new Gson();
         Config config = null;
@@ -54,6 +49,34 @@ public class Config {
             gson.toJson(this, bw);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Chef> getChefs() {
+        return chefs;
+    }
+    
+    public ArrayList<Bartender> getBartenders() {
+        return bartenders;
+    }
+
+    public Items getItems() {
+        return items;
+    }
+
+    public static class Items {
+        @SerializedName("FOOD")
+        private ArrayList<Food> food;
+
+        @SerializedName("DRINK")
+        private ArrayList<Drink> drink;
+
+        public ArrayList<Food> getFoods() {
+            return food;
+        }
+
+        public ArrayList<Drink> getDrinks() {
+            return drink;
         }
     }
 }

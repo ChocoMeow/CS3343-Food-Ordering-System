@@ -54,8 +54,8 @@ public class ViewKitchenProcesses extends Command {
 
     private void displayKitchenProcesses() {
         System.out.println("\nCurrent Kitchen Processes:");
-        System.out.printf("%-20s %-15s %-15s %-20s %-20s%n", "Order Time", "Waiting Time", "Expected Finish", "Details", "Pending Items");
-        System.out.println("------------------------------------------------------------------------------------------------");
+        System.out.printf("%-20s %-15s %-20s %-20s%n", "Order Time", "Waiting Time", "Expected Finish", "Details");
+        System.out.println("-".repeat(120));
         
         if (kitchen.getOrders().isEmpty()) {
             System.out.println("There is currently no order queued!");
@@ -79,7 +79,7 @@ public class ViewKitchenProcesses extends Command {
             processOrdersList(normalOrders);
         }
     
-        System.out.println("------------------------------------------------------------------------------------------------");
+        System.out.println("-".repeat(120));
         
         // Display current processing order
         Order currentOrder = kitchen.getProcessingOrder();
@@ -101,14 +101,15 @@ public class ViewKitchenProcesses extends Command {
             return;
         }
     
-        System.out.printf("%n%-15s%n", "Completed Foods and Drinks");
+        System.out.printf("%n%-15s%n", "Current Order");
         System.out.println("-------------------------------------");
-    
-        displayItems(currentOrder.getFoods(), kitchen.getProcessingFoodIndex());
-        displayItems(currentOrder.getDrinks(), kitchen.getProcessingDrinkIndex());
+        
+        displayItems("𓎦 Foods", currentOrder.getFoods(), kitchen.getProcessingFoodIndex());
+        displayItems("☕︎Drinks", currentOrder.getDrinks(), kitchen.getProcessingDrinkIndex());
     }
     
-    private <T> void displayItems(List<T> items, int processingIndex) {
+    private <T> void displayItems(String title, List<T> items, int processingIndex) {
+        System.out.print(title + ": ");
         for (int i = 0; i < items.size(); i++) {
             T item = items.get(i);
             if (i < processingIndex - 1) {
@@ -118,8 +119,7 @@ public class ViewKitchenProcesses extends Command {
             } else {
                 System.out.print("[ ]");
             }
-            System.out.print(item instanceof Food ? ((Food) item).getName() : ((Drink) item).getName());
-            System.out.print(", ");
+            System.out.print((item instanceof Food ? ((Food) item).getName() : ((Drink) item).getName()) + " ");
         }
         System.out.println();
     }
@@ -132,30 +132,23 @@ public class ViewKitchenProcesses extends Command {
             StringBuilder details = new StringBuilder();
     
             for (Food food : order.getFoods()) {
+                if (!food.isInStock()) {
+                    details.append("[✘]");
+                }
                 details.append(food.getName()).append(" ");
             }
             for (Drink drink : order.getDrinks()) {
+                if (!drink.isInStock()) {
+                    details.append("[✘]");
+                }
                 details.append(drink.getName()).append(" ");
             }
     
-            String pendingItems = "";
-            for (Food food : order.getFoods()) {
-                if (!food.isInStock()) {
-                    pendingItems += food.getName() + " ";
-                }
-            }
-            for (Drink drink : order.getDrinks()) {
-                if (!drink.isInStock()) {
-                    pendingItems += drink.getName() + " ";
-                }
-            }
-    
-            System.out.printf("%-20s %-15s %-15s %-20s %-20s%n",
+            System.out.printf("%-20s %-15s %-20s %-20s%n",
                 Utils.formatDate(order.getOrderTime()),
                 Utils.formatTime(waitingTime),
                 Utils.formatTimeLeft(timeLeft),
-                details.toString().trim(),
-                pendingItems.trim()
+                details.toString().trim()
             );
         }
     }

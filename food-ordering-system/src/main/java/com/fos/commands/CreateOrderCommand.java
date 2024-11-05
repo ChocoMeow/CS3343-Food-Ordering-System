@@ -64,9 +64,9 @@ public class CreateOrderCommand extends Command {
             }
     
             // Adding food to the order
-            System.out.print("Enter food number to add (or type 'done' to finish): ");
+            System.out.print("Enter food number to add (or type 'd' to finish): ");
             String foodChoice = scanner.nextLine();
-            if (foodChoice.equalsIgnoreCase("done")) {
+            if (foodChoice.equalsIgnoreCase("d")) {
                 break;
             }
     
@@ -84,9 +84,9 @@ public class CreateOrderCommand extends Command {
             }
     
             // Adding drink to the order
-            System.out.print("Enter drink number to add (or type 'done' to finish): ");
+            System.out.print("Enter drink number to add (or type 'd' to finish): ");
             String drinkChoice = scanner.nextLine();
-            if (drinkChoice.equalsIgnoreCase("done")) {
+            if (drinkChoice.equalsIgnoreCase("d")) {
                 break;
             }
     

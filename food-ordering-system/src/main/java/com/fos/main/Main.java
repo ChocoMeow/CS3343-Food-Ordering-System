@@ -1,26 +1,20 @@
 package com.fos.main;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import com.fos.Task.Task;
 import com.fos.commands.Command;
-import com.fos.worker.Bartender;
-import com.fos.worker.Chef;
 
 public class Main {
     public static Kitchen kitchen;
 
     public static void main(String[] args) {
-        // Create chefs and bartenders
-        Chef chef1 = new Chef("Gordon");
-        Chef chef2 = new Chef("Jamie");
-        Bartender bartender1 = new Bartender("Mix Master");
+        Config config = Config.loadConfig();
 
         // Initialize kitchen
-        kitchen = new Kitchen(Arrays.asList(chef1, chef2), Arrays.asList(bartender1));
+        kitchen = new Kitchen(config);
 
         // Start the background task to process orders
         Task orderProcessingTask = new Task(0, 1) {

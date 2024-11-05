@@ -1,25 +1,60 @@
 {
-    "CHEF_NUM": 2,
-    "BARTENDER_NUM": 1,
+    "CHEFS": [
+        {
+            "name": "Gordon"
+        },
+        {
+            "name": "Jamie"
+        }
+    ],
+    "BARTENDERS": [
+        {
+            "name": "Tom"
+        }
+    ],
     "BATCH_JOB_PER_TIME": 1.0,
     "ORDER_DEQUEUE_THRESHOLD": 2.0,
     "ORDER_INTERVAL_CONFIG": 20.0,
     "ITEMS": {
-        "FOOD": {
-            "HOTDOG": {
-                "price": 10,
-                "production": 5,
-                "prepareTime": 5,
-                "isAvailable": true
+        "FOOD": [
+            {
+                "name": "Pasta",
+                "price": 25,
+                "cookingTime": 20,
+                "stock": 0
+            },
+            {
+                "name": "Hotdog",
+                "price": 30,
+                "cookingTime": 35,
+                "stock": 0
+            },
+            {
+                "name": "Ice-cream",
+                "price": 20,
+                "cookingTime": 15,
+                "stock": 0
+            },
+            {
+                "name": "Apple",
+                "price": 5,
+                "cookingTime": 3,
+                "stock": 0
             }
-        },
-        "DRINK": {
-            "WATER": {
+        ],
+        "DRINK": [
+            {
+                "name": "Cocktail",
+                "price": 20,
+                "mixingTime": 40,
+                "stock": 0
+            },
+            {
+                "name": "Soda",
                 "price": 10,
-                "production": 1,
-                "prepareTime": 5,
-                "isAvailable": true
+                "mixingTime": 20,
+                "stock": 0
             }
-        }
+        ]
     }
 }

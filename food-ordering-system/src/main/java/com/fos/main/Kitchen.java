@@ -30,21 +30,12 @@ public class Kitchen {
     private List<Food> availableFoods;
     private List<Drink> availableDrinks;
 
-    public Kitchen(List<Chef> chefs, List<Bartender> bartenders) {
-        this.chefs = chefs;
-        this.bartenders = bartenders;
+    public Kitchen(Config config) {
+        this.chefs = config.getChefs();
+        this.bartenders = config.getBartenders();
+        this.availableFoods = config.getItems().getFoods();
+        this.availableDrinks = config.getItems().getDrinks();
         this.orders = new LinkedList<>();
-        this.availableFoods = Arrays.asList(
-            new Food("Pasta", 25, 20, 0),
-            new Food("Hotdog", 30, 35, 0),
-            new Food("ice-cream", 20, 15, 0),
-            new Food("apple", 5, 3, 0)
-        );
-        
-        this.availableDrinks = Arrays.asList(
-            new Drink("Cocktail", 20, 40, 0),
-            new Drink("Soda", 10, 20, 0)
-        );
     }
 
     public void placeOrder(Order order) {
