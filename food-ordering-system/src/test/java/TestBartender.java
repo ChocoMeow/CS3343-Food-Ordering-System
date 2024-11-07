@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fos.item.Drink;
-import com.fos.member.Bartender;
+import com.fos.worker.Bartender;
 
 public class TestBartender  {
 

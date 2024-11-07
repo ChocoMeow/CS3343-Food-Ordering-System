@@ -9,7 +9,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fos.item.Food;
-import com.fos.member.Chef;
+import com.fos.worker.Chef;
+
 
 public class TestChef  {
 
