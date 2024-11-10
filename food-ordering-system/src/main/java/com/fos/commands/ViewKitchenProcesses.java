@@ -96,7 +96,7 @@ public class ViewKitchenProcesses extends Command {
         System.out.print("\nPress 'e' to exit view...");
     }
 
-    private void displayCurrentOrderDetails(Order currentOrder) {
+    public void displayCurrentOrderDetails(Order currentOrder) {
         if (currentOrder == null) {
             return;
         }
