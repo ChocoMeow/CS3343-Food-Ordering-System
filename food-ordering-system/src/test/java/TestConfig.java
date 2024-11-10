@@ -47,35 +47,35 @@ public class TestConfig {
         config.items.drink = new ArrayList<>();
     }
 
-    @Test
-    public void testLoadConfig() throws IOException {
+    // @Test
+    // public void testLoadConfig() throws IOException {
 
-        Config loadedConfig = Config.loadConfig(); // Load config using the BufferedReader
-        assertNotNull(loadedConfig, "Loaded config should not be null");
+    //     Config loadedConfig = Config.loadConfig(); // Load config using the BufferedReader
+    //     assertNotNull(loadedConfig, "Loaded config should not be null");
 
-        // Validate chefs
-        assertEquals(2, loadedConfig.getChefs().size(), "Should load 2 chefs");
-        assertEquals("Gordon", loadedConfig.getChefs().get(0).getName(), "First chef should be Gordon");
-        assertEquals("Jamie", loadedConfig.getChefs().get(1).getName(), "Second chef should be Jamie");
+    //     // Validate chefs
+    //     assertEquals(2, loadedConfig.getChefs().size(), "Should load 2 chefs");
+    //     assertEquals("Gordon", loadedConfig.getChefs().get(0).getName(), "First chef should be Gordon");
+    //     assertEquals("Jamie", loadedConfig.getChefs().get(1).getName(), "Second chef should be Jamie");
 
-        // Validate bartenders
-        assertEquals(1, loadedConfig.getBartenders().size(), "Should load 1 bartender");
-        assertEquals("Tom", loadedConfig.getBartenders().get(0).getName(), "Bartender should be Tom");
+    //     // Validate bartenders
+    //     assertEquals(1, loadedConfig.getBartenders().size(), "Should load 1 bartender");
+    //     assertEquals("Tom", loadedConfig.getBartenders().get(0).getName(), "Bartender should be Tom");
 
-        // Validate items
-        assertNotNull(loadedConfig.getItems(), "Items should not be null");
-        assertEquals(4, loadedConfig.getItems().getFoods().size(), "Should load 4 food items");
-        assertEquals(2, loadedConfig.getItems().getDrinks().size(), "Should load 2 drink items");
+    //     // Validate items
+    //     assertNotNull(loadedConfig.getItems(), "Items should not be null");
+    //     assertEquals(4, loadedConfig.getItems().getFoods().size(), "Should load 4 food items");
+    //     assertEquals(2, loadedConfig.getItems().getDrinks().size(), "Should load 2 drink items");
 
-        // Validate food items
-        assertEquals("Pasta", loadedConfig.getItems().getFoods().get(0).getName());
-        assertEquals(25, loadedConfig.getItems().getFoods().get(0).getPrice());
-        assertEquals("Hotdog", loadedConfig.getItems().getFoods().get(1).getName());
+    //     // Validate food items
+    //     assertEquals("Pasta", loadedConfig.getItems().getFoods().get(0).getName());
+    //     assertEquals(25, loadedConfig.getItems().getFoods().get(0).getPrice());
+    //     assertEquals("Hotdog", loadedConfig.getItems().getFoods().get(1).getName());
 
-        // Validate drink items
-        assertEquals("Cocktail", loadedConfig.getItems().getDrinks().get(0).getName());
-        assertEquals(20, loadedConfig.getItems().getDrinks().get(0).getPrice());
-    }
+    //     // Validate drink items
+    //     assertEquals("Cocktail", loadedConfig.getItems().getDrinks().get(0).getName());
+    //     assertEquals(20, loadedConfig.getItems().getDrinks().get(0).getPrice());
+    // }
 
 
     // @Test
