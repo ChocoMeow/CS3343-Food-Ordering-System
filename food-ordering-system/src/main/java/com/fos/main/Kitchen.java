@@ -128,7 +128,7 @@ public class Kitchen {
         bartenderExecutor.shutdown();
     }
 
-    private Chef findAvailableChef() {
+    public Chef findAvailableChef() {
         for (int i = 0; i < chefs.size(); i++) {
             int index = (lastChefIndex + i) % chefs.size();
             if (!chefs.get(index).isBusy()) {
@@ -139,7 +139,7 @@ public class Kitchen {
         return null; // No available chefs
     }
 
-    private Bartender findAvailableBartender() {
+    public Bartender findAvailableBartender() {
         for (int i = 0; i < bartenders.size(); i++) {
             int index = (lastBartenderIndex + i) % bartenders.size();
             if (!bartenders.get(index).isBusy()) {
