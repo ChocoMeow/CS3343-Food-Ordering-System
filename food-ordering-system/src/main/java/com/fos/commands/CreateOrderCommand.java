@@ -64,43 +64,57 @@ public class CreateOrderCommand extends Command {
             }
     
             // Adding food to the order
-            System.out.print("Enter food number to add (or type 'd' to finish): ");
-            String foodChoice = scanner.nextLine();
-            if (foodChoice.equalsIgnoreCase("d")) {
-                break;
-            }
-    
-            try {
-                int foodIndex = Integer.parseInt(foodChoice) - 1;
-                if (foodIndex >= 0 && foodIndex < foods.size()) {
-                    Food selectedFood = foods.get(foodIndex);
-                    order.addFood(selectedFood);
-                    System.out.println(selectedFood.getName() + " added to the order.");
-                } else {
-                    System.out.println("Invalid food selection. Try again.");
+            boolean validFoodSelection = false;
+            boolean validDrinkSelection = false;
+            while (!validFoodSelection) {
+                System.out.print("Enter food number to add (or type 'd' to finish): ");
+                String foodChoice = scanner.nextLine();
+                
+                if (foodChoice.equalsIgnoreCase("d")) {
+                    ordering = false;
+                    validDrinkSelection = true;
+                    break;
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
+
+                try {
+                    int foodIndex = Integer.parseInt(foodChoice) - 1;
+                    if (foodIndex >= 0 && foodIndex < foods.size()) {
+                        Food selectedFood = foods.get(foodIndex);
+                        order.addFood(selectedFood);
+                        System.out.println(selectedFood.getName() + " added to the order.");
+                        validFoodSelection = true;  // 成功添加食物后，继续询问下一个食物
+                    } else {
+                        System.out.println("Invalid food selection. Please try again.");
+                        // validFoodSelection 保持为 false，循环会继续
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter a valid number.");
+                    // validFoodSelection 保持为 false，循环会继续
+                }
             }
-    
+
             // Adding drink to the order
-            System.out.print("Enter drink number to add (or type 'd' to finish): ");
-            String drinkChoice = scanner.nextLine();
-            if (drinkChoice.equalsIgnoreCase("d")) {
-                break;
-            }
-    
-            try {
-                int drinkIndex = Integer.parseInt(drinkChoice) - 1;
-                if (drinkIndex >= 0 && drinkIndex < drinks.size()) {
-                    Drink selectedDrink = drinks.get(drinkIndex);
-                    order.addDrink(selectedDrink);
-                    System.out.println(selectedDrink.getName() + " added to the order.");
-                } else {
-                    System.out.println("Invalid drink selection. Try again.");
+            while (!validDrinkSelection) {
+                System.out.print("Enter drink number to add (or type 'd' to finish): ");
+                String drinkChoice = scanner.nextLine();
+                if (drinkChoice.equalsIgnoreCase("d")) {
+                    ordering = false;
+                    break;
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
+        
+                try {
+                    int drinkIndex = Integer.parseInt(drinkChoice) - 1;
+                    if (drinkIndex >= 0 && drinkIndex < drinks.size()) {
+                        Drink selectedDrink = drinks.get(drinkIndex);
+                        order.addDrink(selectedDrink);
+                        System.out.println(selectedDrink.getName() + " added to the order.");
+                        validDrinkSelection = true; 
+                    } else {
+                        System.out.println("Invalid drink selection. Try again.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter a valid number.");
+                }
             }
         }
     
