@@ -53,7 +53,8 @@ public class Main {
                 scanner.close();
                 return;
             } else {
-                System.out.println("Invalid choice. Please try again.");
+                System.out.println("Invalid choice. Press Enter to continue...");
+                scanner.nextLine();
             }
         }
     }
