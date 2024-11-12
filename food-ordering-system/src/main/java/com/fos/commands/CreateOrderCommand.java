@@ -76,6 +76,10 @@ public class CreateOrderCommand extends Command {
                     break;
                 }
 
+                if (foodChoice.isEmpty()) { // 处理直接按回车的情况
+                    break;  // 退出当前循环，进入下一个选择
+                }
+
                 try {
                     int foodIndex = Integer.parseInt(foodChoice) - 1;
                     if (foodIndex >= 0 && foodIndex < foods.size()) {
@@ -100,6 +104,10 @@ public class CreateOrderCommand extends Command {
                 if (drinkChoice.equalsIgnoreCase("d")) {
                     ordering = false;
                     break;
+                }
+
+                if (drinkChoice.isEmpty()) { // 处理直接按回车的情况
+                    break;  // 退出当前循环，进入下一个选择
                 }
         
                 try {
