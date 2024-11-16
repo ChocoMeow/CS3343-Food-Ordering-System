@@ -11,6 +11,14 @@ import com.fos.item.Food;
 import com.fos.worker.Bartender;
 import com.fos.worker.Chef;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+
 public class Kitchen {
     private final List<Chef> chefs;
     private final List<Bartender> bartenders;
