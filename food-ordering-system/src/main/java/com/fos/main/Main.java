@@ -6,6 +6,10 @@ import java.util.Scanner;
 
 import com.fos.Task.Task;
 import com.fos.commands.Command;
+import com.fos.commands.CreateOrderCommand;
+import com.fos.commands.CreateReport;
+import com.fos.commands.ViewKitchenProcesses;
+import com.fos.commands.updatesettingscommand.UpdateSettingsCommand;
 
 public class Main {
     public static Kitchen kitchen;
@@ -26,7 +30,14 @@ public class Main {
         orderProcessingTask.start();
 
         // Command menu
-        CommandFactory commandFactory = new CommandFactory();
+        List<Command> commandList = new ArrayList<>();
+        commandList.add(new CreateOrderCommand());
+        commandList.add(new ViewKitchenProcesses());
+        commandList.add(new CreateReport());
+        commandList.add(new UpdateSettingsCommand());
+        
+        CommandFactory commandFactory = new CommandFactory(commandList);
+
         CommandInvoker invoker = new CommandInvoker();
         Scanner scanner = new Scanner(System.in);
 
@@ -45,7 +56,7 @@ public class Main {
 
             if (choice >= 1 && choice <= commands.size()) {
                 Command command = commands.get(choice - 1);
-                invoker.executeCommand(command, scanner, kitchen);
+                invoker.executeCommand(command, scanner, kitchen, config);
 
             } else if (choice == commands.size() + 1) {
                 orderProcessingTask.stop();

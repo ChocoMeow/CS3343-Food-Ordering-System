@@ -3,7 +3,7 @@ package com.fos.worker;
 import com.fos.item.Drink;
 
 public class Bartender {
-    private final String name;
+    private String name;
     private Drink currentDrink;
     private boolean isBusy = false;
     private long mixingStartTime;
@@ -49,5 +49,9 @@ public class Bartender {
 
     public int getTotalHandledDrinks() {
         return totalHandledDrinks;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
     }
 }

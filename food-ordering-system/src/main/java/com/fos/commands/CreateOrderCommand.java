@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.fos.item.Drink;
 import com.fos.item.Food;
+import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Order;
 import com.fos.main.Utils;
@@ -16,7 +17,7 @@ public class CreateOrderCommand extends Command {
     private static String commandName = "Create an order";
 
     @Override
-    public void execute(Scanner scanner, Kitchen kitchen) {
+    public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         Order order = new Order();
         boolean ordering = true;
     

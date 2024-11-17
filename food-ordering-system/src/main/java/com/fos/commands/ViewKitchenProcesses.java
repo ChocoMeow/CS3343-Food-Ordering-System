@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import com.fos.item.Drink;
 import com.fos.item.Food;
+import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Order;
 import com.fos.main.Utils;
@@ -18,7 +19,7 @@ public class ViewKitchenProcesses extends Command {
     private Kitchen kitchen;
 
     @Override
-    public void execute(Scanner scanner, Kitchen kitchen) {
+    public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         this.kitchen = kitchen;
         System.out.println("\n--- View Kitchen Process List ---");
 
@@ -39,11 +40,9 @@ public class ViewKitchenProcesses extends Command {
 
         // Wait for user input to exit
         while (true) {
-            String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("e")) {
-                refreshThread.interrupt(); // Stop the refresh thread
-                break;
-            }
+            scanner.nextLine();
+            refreshThread.interrupt(); // Stop the refresh thread
+            break;
         }
     }
 
@@ -93,7 +92,7 @@ public class ViewKitchenProcesses extends Command {
         // Show bartender activity
         displayBartenderActivities();
 
-        System.out.print("\nPress 'e' to exit view...");
+        System.out.print("\nPress 'ENTER' to exit view...");
     }
 
     private void displayCurrentOrderDetails(Order currentOrder) {
