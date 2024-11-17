@@ -9,20 +9,18 @@ import com.fos.commands.updatesettingscommand.bartendercommand.BartenderMenuComm
 import com.fos.commands.updatesettingscommand.chefcommand.ChefMenuCommand;
 import com.fos.commands.updatesettingscommand.drinkcommand.DrinkMenuCommand;
 import com.fos.commands.updatesettingscommand.foodcommand.FoodMenuCommand;
-import com.fos.item.*;
 import com.fos.main.CommandFactory;
 import com.fos.main.CommandInvoker;
 import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Utils;
-import com.fos.worker.*;
 
 public class UpdateSettingsCommand extends Command {
 
-    private static String commandName = "Update Settings";
+    private static String commandName = "Update settings";
 
     @Override
-    public void execute(Scanner scanner, Kitchen kitchen, Config config) {
+    public void execute(Scanner scanner, Kitchen kitchen, Config ogConfig) {
         List<Command> commandList = new ArrayList<>();
         commandList.add(new ChefMenuCommand());
         commandList.add(new BartenderMenuCommand());
@@ -33,6 +31,8 @@ public class UpdateSettingsCommand extends Command {
         CommandFactory commandFactory = new CommandFactory(commandList);
         CommandInvoker invoker = new CommandInvoker();
         List<Command> commands = new ArrayList<>(commandFactory.getAllCommands());
+
+        Config config = Config.loadConfig();
 
         while (true) {
             Utils.clearConsole();
@@ -56,69 +56,6 @@ public class UpdateSettingsCommand extends Command {
             }
         }
     }
-
-    private void listChefs(ArrayList<Chef> chefs) {
-        for (int i = 0; i < chefs.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), chefs.get(i).getName());
-        }
-    }
-
-    private void listBartenders(ArrayList<Bartender> bartenders) {
-        for (int i = 0; i < bartenders.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), bartenders.get(i).getName());
-        }
-    }
-
-
-    private void listFoodItems(ArrayList<Food> foodItems) {
-        for (int i = 0; i < foodItems.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), foodItems.get(i).getName());
-        }
-    }
-
-
-    private void listDrinkItems(ArrayList<Drink> drinkItems) {
-        for (int i = 0; i < drinkItems.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), drinkItems.get(i).getName());
-        }
-    }
-
-
-    // private boolean isNameUnique(String name, ArrayList<Chef> chefs) {
-    //     for (Chef chef : chefs) {
-    //         if (chef.getName().equalsIgnoreCase(name)) {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
-    // private boolean isNameUnique(String name, ArrayList<Bartender> bartenders) {
-    //     for (Bartender bartender : bartenders) {
-    //         if (bartender.getName().equalsIgnoreCase(name)) {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
-    // private boolean isNameUnique(String name, ArrayList<Food> foods) {
-    //     for (Food food : foods) {
-    //         if (food.getName().equalsIgnoreCase(name)) {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
-    // private boolean isNameUnique(String name, ArrayList<Drink> drinks) {
-    //     for (Drink drink : drinks) {
-    //         if (drink.getName().equalsIgnoreCase(name)) {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
 
     @Override
     public String getCommandName() {

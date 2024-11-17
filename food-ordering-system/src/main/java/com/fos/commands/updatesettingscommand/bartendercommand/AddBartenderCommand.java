@@ -1,5 +1,6 @@
 package com.fos.commands.updatesettingscommand.bartendercommand;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.fos.commands.Command;
@@ -19,12 +20,16 @@ public class AddBartenderCommand extends Command {
         config.getBartenders().add(new Bartender(newName));
         System.out.println("Bartender added successfully.");
 
-        // if (isNameUnique(newName, config.getBartenders())) {
-        //     config.getBartenders().add(new Bartender(newName));
-        //     System.out.println("Bartender added successfully.");
-        // } else {
-        //     System.out.println("Bartender name must be unique. Please try again.");
-        // }
+        boolean bartenderExists = kitchen.getBartenders().stream()
+            .anyMatch(bartender -> bartender.getName().equalsIgnoreCase(newName));
+
+        if (!bartenderExists) {
+            config.getBartenders().add(new Bartender(newName));
+            System.out.println("Bartender added successfully.");
+        } else {
+            System.out.println("Bartender name must be unique. Please try again.");
+        }
+        
     }
 
     @Override

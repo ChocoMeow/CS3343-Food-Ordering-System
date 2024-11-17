@@ -19,12 +19,15 @@ public class AddChefCommand extends Command {
         config.getChefs().add(new Chef(newName));
         System.out.println("Chef added successfully.");
 
-        // if (isNameUnique(newName, config.getChefs())) {
-        //     config.getChefs().add(new Chef(newName));
-        //     System.out.println("Chef added successfully.");
-        // } else {
-        //     System.out.println("Chef name must be unique. Please try again.");
-        // }
+        boolean chefExists = kitchen.getChefs().stream()
+            .anyMatch(chef -> chef.getName().equalsIgnoreCase(newName));
+
+        if (!chefExists) {
+            config.getChefs().add(new Chef(newName));
+            System.out.println("Chef added successfully.");
+        } else {
+            System.out.println("Chef name must be unique. Please try again.");
+        }
     }
 
     @Override

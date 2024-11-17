@@ -29,15 +29,16 @@ public class UpdateFoodCommand extends Command {
             System.out.print("Enter new name for food item: ");
             String newName = scanner.nextLine();
 
-            config.getItems().getFoods().get(choice - 1).setName(newName);
-            System.out.println("Food item name updated successfully.");
+            boolean foodExists = kitchen.getAvailableDrinks().stream()
+                .anyMatch(food -> food.getName().equalsIgnoreCase(newName));
 
-            // if (isNameUnique(newName, config.getItems().getFoods())) {
-            //     config.getItems().getFoods().get(choice - 1).setName(newName);
-            //     System.out.println("Food item name updated successfully.");
-            // } else {
-            //     System.out.println("Food item name must be unique. Please try again.");
-            // }
+            if (!foodExists) {
+                config.getItems().getFoods().get(choice - 1).setName(newName);
+                System.out.println("Food item name updated successfully.");
+            } else {
+                System.out.println("Food item name must be unique. Please try again.");
+            }
+            
         } else {
             System.out.println("Invalid choice.");
         }

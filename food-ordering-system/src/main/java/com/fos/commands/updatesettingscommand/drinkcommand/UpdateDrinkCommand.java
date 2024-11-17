@@ -28,16 +28,17 @@ public class UpdateDrinkCommand extends Command {
         if (choice > 0 && choice <= config.getItems().getDrinks().size()) {
             System.out.print("Enter new name for drink item: ");
             String newName = scanner.nextLine();
+            
+            boolean drinkExists = kitchen.getAvailableDrinks().stream()
+                .anyMatch(drink -> drink.getName().equalsIgnoreCase(newName));
 
-            config.getItems().getDrinks().get(choice - 1).setName(newName);
-            System.out.println("Drink item name updated successfully.");
+            if (!drinkExists) {
+                config.getItems().getDrinks().get(choice - 1).setName(newName);
+                System.out.println("Drink item name updated successfully.");
+            } else {
+                System.out.println("Drink item name must be unique. Please try again.");
+            }
 
-            // if (isNameUnique(newName, config.getItems().getDrinks())) {
-            //     config.getItems().getDrinks().get(choice - 1).setName(newName);
-            //     System.out.println("Drink item name updated successfully.");
-            // } else {
-            //     System.out.println("Drink item name must be unique. Please try again.");
-            // }
         } else {
             System.out.println("Invalid choice.");
         }

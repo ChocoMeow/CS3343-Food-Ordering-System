@@ -15,15 +15,15 @@ public class AddFoodCommand extends Command {
         System.out.print("Enter name for new food item: ");
         String newName = scanner.nextLine();
 
-        config.getItems().getFoods().add(new Food(newName, 0, 0, 0));
-        System.out.println("Food item added successfully.");
+        boolean foodExists = kitchen.getAvailableDrinks().stream()
+            .anyMatch(food -> food.getName().equalsIgnoreCase(newName));
 
-        // if (isNameUnique(newName, config.getItems().getFoods())) {
-        //     config.getItems().getFoods().add(new Food(newName, 0, 0, 0));
-        //     System.out.println("Food item added successfully.");
-        // } else {
-        //     System.out.println("Food item name must be unique. Please try again.");
-        // }
+        if (!foodExists) {
+            config.getItems().getFoods().add(new Food(newName, 0, 0, 0));
+            System.out.println("Food item added successfully.");
+        } else {
+            System.out.println("Food item name must be unique. Please try again.");
+        }
     }
 
     @Override

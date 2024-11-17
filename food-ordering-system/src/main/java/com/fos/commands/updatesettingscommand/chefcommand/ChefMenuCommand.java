@@ -10,7 +10,6 @@ import com.fos.main.CommandInvoker;
 import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Utils;
-import com.fos.worker.Chef;
 
 public class ChefMenuCommand extends Command {
 

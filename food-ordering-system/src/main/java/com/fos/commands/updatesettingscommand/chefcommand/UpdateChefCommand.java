@@ -30,15 +30,15 @@ public class UpdateChefCommand extends Command {
             System.out.print("Enter new name for chef: ");
             String newName = scanner.nextLine();
 
-            config.getChefs().get(choice - 1).setName(newName);
-            System.out.println("Chef name updated successfully.");
+            boolean chefExists = kitchen.getChefs().stream()
+                .anyMatch(chef -> chef.getName().equalsIgnoreCase(newName));
 
-            // if (isNameUnique(newName, config.getChefs())) {
-            //     config.getChefs().get(choice - 1).setName(newName);
-            //     System.out.println("Chef name updated successfully.");
-            // } else {
-            //     System.out.println("Chef name must be unique. Please try again.");
-            // }
+            if (!chefExists) {
+                config.getChefs().get(choice - 1).setName(newName);
+                System.out.println("Chef name updated successfully.");
+            } else {
+                System.out.println("Chef name must be unique. Please try again.");
+            }
         } else {
             System.out.println("Invalid choice.");
         }

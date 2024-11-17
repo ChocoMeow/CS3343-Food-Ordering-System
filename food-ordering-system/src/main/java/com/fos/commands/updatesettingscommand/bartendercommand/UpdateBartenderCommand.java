@@ -30,15 +30,16 @@ public class UpdateBartenderCommand extends Command {
             System.out.print("Enter new name for bartender: ");
             String newName = scanner.nextLine();
 
-            config.getBartenders().get(choice - 1).setName(newName);
-            System.out.println("Bartender name updated successfully.");
-                
-            // if (isNameUnique(newName, config.getBartenders())) {
-            //     config.getBartenders().get(choice - 1).setName(newName);
-            //     System.out.println("Bartender name updated successfully.");
-            // } else {
-            //     System.out.println("Bartender name must be unique. Please try again.");
-            // }
+            boolean bartenderExists = kitchen.getBartenders().stream()
+                .anyMatch(bartender -> bartender.getName().equalsIgnoreCase(newName));
+
+            if (!bartenderExists) {
+                config.getBartenders().get(choice - 1).setName(newName);
+                System.out.println("Bartender name updated successfully.");
+            } else {
+                System.out.println("Bartender name must be unique. Please try again.");
+            }
+            
         } else {
             System.out.println("Invalid choice.");
         }
