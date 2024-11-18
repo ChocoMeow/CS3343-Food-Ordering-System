@@ -48,19 +48,15 @@ public class Main {
             Utils.clearConsole();
             int choice = Utils.printMenu(scanner, commands, additionalCommands);
 
-            if (choice >= 1 && choice <= commands.size()) {
-                Command command = commands.get(choice - 1);
-                invoker.executeCommand(command, scanner, kitchen, config);
-
-            } else if (choice == commands.size() + 1) {
+            if (choice == commands.size() + 1) {
                 orderProcessingTask.stop();
                 System.out.println("Simulator stopped.");
                 scanner.close();
                 return;
-            } else {
-                System.out.println("Invalid choice. Press Enter to continue...");
-                scanner.nextLine();
             }
+
+            Command command = commands.get(choice - 1);
+            invoker.executeCommand(command, scanner, kitchen, config);
         }
     }
 }
