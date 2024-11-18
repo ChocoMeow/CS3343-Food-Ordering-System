@@ -31,8 +31,8 @@ public class Config {
     public ArrayList<Bartender> bartenders;
 
     @SerializedName("ITEMS")
-    private Items items;
-
+    public Items items;
+    
     public static Config loadConfig() {
         Gson gson = new Gson();
         Config config = null;
