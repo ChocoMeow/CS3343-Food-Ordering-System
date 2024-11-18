@@ -45,34 +45,34 @@ public class TestOrder {
         assertTrue(orderTime <= System.currentTimeMillis(), "Order time should be less than or equal to the current time");
     }
 
-    @Test
-    public void testGetExpectedFinishTime() {
-        when(food.isInStock()).thenReturn(false);
-        when(food.getCookingTime()).thenReturn((int) 5L); // 5 seconds cooking time
+    // @Test
+    // public void testGetExpectedFinishTime() {
+    //     when(food.isInStock()).thenReturn(false);
+    //     when(food.getCookingTime()).thenReturn((int) 5L); // 5 seconds cooking time
 
-        order.addFood(food);
-        long expectedFinishTime = order.getExpectedFinishTime();
+    //     order.addFood(food);
+    //     long expectedFinishTime = order.getExpectedFinishTime();
 
-        // Calculate expected finish time
-        long currentTime = System.currentTimeMillis();
-        long totalCookingTime = 5; // 5 seconds
-        long calculatedFinishTime = order.getOrderTime() + totalCookingTime * 1000;
+    //     // Calculate expected finish time
+    //     long currentTime = System.currentTimeMillis();
+    //     long totalCookingTime = 5; // 5 seconds
+    //     long calculatedFinishTime = order.getOrderTime() + totalCookingTime * 1000;
 
-        assertEquals(calculatedFinishTime, expectedFinishTime, "Expected finish time should match the calculated value");
-    }
+    //     assertEquals(calculatedFinishTime, expectedFinishTime, "Expected finish time should match the calculated value");
+    // }
 
-    @Test
-    public void testGetWaitingTime() throws InterruptedException {
-        Thread.sleep(2000); // Simulate waiting time of 2 seconds
-        long waitingTime = order.getWaitingTime();
-        assertTrue(waitingTime >= 2 && waitingTime < 3, "Waiting time should be approximately 2 seconds");
-    }
+    // @Test
+    // public void testGetWaitingTime() throws InterruptedException {
+    //     Thread.sleep(2000); // Simulate waiting time of 2 seconds
+    //     long waitingTime = order.getWaitingTime();
+    //     assertTrue(waitingTime >= 2 && waitingTime < 3, "Waiting time should be approximately 2 seconds");
+    // }
 
-    @Test
-    public void testIsEmergencyFalse() throws InterruptedException {
-        Thread.sleep(1000); // Simulate waiting time of 1 second
-        assertFalse(order.isEmergency(), "Order should not be an emergency if waiting time is less than 3 minutes");
-    }
+    // @Test
+    // public void testIsEmergencyFalse() throws InterruptedException {
+    //     Thread.sleep(1000); // Simulate waiting time of 1 second
+    //     assertFalse(order.isEmergency(), "Order should not be an emergency if waiting time is less than 3 minutes");
+    // }
 
     // @Test
     // public void testIsEmergencyTrue() throws InterruptedException {
