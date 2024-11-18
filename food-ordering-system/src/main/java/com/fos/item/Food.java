@@ -4,9 +4,9 @@ import lombok.ToString;
 
 @ToString
 public class Food {
-    private final String name;
-    private final float price;
-    private final int cookingTime;
+    private String name;
+    private float price;
+    private int cookingTime;
     private int stock;
 
     public Food(String name, float price, int cookingTime, int stock) {
@@ -56,5 +56,21 @@ public class Food {
         restock(); // Add back to stock after cooking
         // System.out.printf("%s is ready and added to stock!%n", name);
         use();
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setPrice(Float newPrice) {
+        this.price = newPrice;
+    }
+
+    public void setCookingTime(Integer newCookingTime) {
+        this.cookingTime = newCookingTime;
+    }
+
+    public void setStock(Integer newStock) {
+        this.stock = newStock;
     }
 }

@@ -3,7 +3,7 @@ package com.fos.worker;
 import com.fos.item.Food;
 
 public class Chef {
-    private final String name;
+    private String name;
     private Food currentFood;
     private boolean isBusy = false;
     private long cookingStartTime;
@@ -49,6 +49,10 @@ public class Chef {
 
     public int getTotalHandledFoods() {
         return totalHandledFoods;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
     }
 
 }

@@ -2,6 +2,7 @@ package com.fos.commands;
 
 import java.util.Scanner;
 
+import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Utils;
 import com.fos.worker.Bartender;
@@ -9,10 +10,10 @@ import com.fos.worker.Chef;
 
 public class CreateReport extends Command {
 
-    private static String commandName = "Create report";
+    private static String commandName = "Create Report";
 
     @Override
-    public void execute(Scanner scanner, Kitchen kitchen) {
+    public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         Utils.clearConsole();
         System.out.printf("%n%-30s: %d%n", "Total Handled Orders", kitchen.getTotalHandledOrder());
         System.out.printf("%-30s: $%.2f%n", "Total Profit", kitchen.getTotalProfit());
@@ -43,7 +44,7 @@ public class CreateReport extends Command {
         }
 
         System.out.print("\nPress Enter to exit...");
-        String exit = scanner.nextLine();
+        scanner.nextLine();
     }
 
     @Override

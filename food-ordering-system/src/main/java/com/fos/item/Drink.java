@@ -4,7 +4,7 @@ import lombok.ToString;
 
 @ToString
 public class Drink {
-    private final String name;
+    private String name;
     private float price;
     private int mixingTime;
     private int stock;
@@ -54,5 +54,21 @@ public class Drink {
         }
         restock();
         use();
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setPrice(Float newPrice) {
+        this.price = newPrice;
+    }
+
+    public void setMixingTime(Integer newMixingTime) {
+        this.mixingTime = newMixingTime;
+    }
+
+    public void setStock(Integer newStock) {
+        this.stock = newStock;
     }
 }

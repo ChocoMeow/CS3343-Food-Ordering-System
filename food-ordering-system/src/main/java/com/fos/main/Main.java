@@ -6,6 +6,10 @@ import java.util.Scanner;
 
 import com.fos.Task.Task;
 import com.fos.commands.Command;
+import com.fos.commands.CreateOrderCommand;
+import com.fos.commands.CreateReport;
+import com.fos.commands.ViewKitchenProcesses;
+import com.fos.commands.updatesettingscommand.UpdateSettingsCommand;
 
 public class Main {
     public static Kitchen kitchen;
@@ -26,36 +30,33 @@ public class Main {
         orderProcessingTask.start();
 
         // Command menu
-        CommandFactory commandFactory = new CommandFactory();
+        List<Command> commandList = new ArrayList<>();
+        commandList.add(new CreateOrderCommand());
+        commandList.add(new ViewKitchenProcesses());
+        commandList.add(new CreateReport());
+        commandList.add(new UpdateSettingsCommand());
+        
+        CommandFactory commandFactory = new CommandFactory(commandList);
+
         CommandInvoker invoker = new CommandInvoker();
         Scanner scanner = new Scanner(System.in);
 
         List<Command> commands = new ArrayList<>(commandFactory.getAllCommands());
+        List<String> additionalCommands = List.of("Exit");
 
         while (true) {
             Utils.clearConsole();
-            System.out.println("\n--- Restaurant Simulator Menu ---");
-            for (int i = 0; i < commands.size(); i++) {
-                System.out.printf("%d. %s%n", (i + 1), commands.get(i).getCommandName());
-            }
-            System.out.println((commands.size() + 1) + ". Exit");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int choice = Utils.printMenu(scanner, commands, additionalCommands);
 
-            if (choice >= 1 && choice <= commands.size()) {
-                Command command = commands.get(choice - 1);
-                invoker.executeCommand(command, scanner, kitchen);
-
-            } else if (choice == commands.size() + 1) {
+            if (choice == commands.size() + 1) {
                 orderProcessingTask.stop();
                 System.out.println("Simulator stopped.");
                 scanner.close();
                 return;
-            } else {
-                System.out.println("Invalid choice. Press Enter to continue...");
-                scanner.nextLine();
             }
+
+            Command command = commands.get(choice - 1);
+            invoker.executeCommand(command, scanner, kitchen, config);
         }
     }
 }
