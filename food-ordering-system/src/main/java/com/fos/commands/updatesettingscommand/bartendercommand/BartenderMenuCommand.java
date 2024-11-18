@@ -31,15 +31,12 @@ public class BartenderMenuCommand extends Command {
             int choice = Utils.printMenu(scanner, commands, additionalCommands);
             Utils.clearConsole();
             
-            if (choice >= 1 && choice <= commands.size()) {
-                Command command = commands.get(choice - 1);
-                invoker.executeCommand(command, scanner, kitchen, config);
-            } else if (choice == commands.size() + 1) {
+            if (choice == commands.size() + 1) {
                 return;
-            } else {
-                System.out.println("Invalid choice. Press Enter to continue...");
-                scanner.nextLine();
             }
+
+            Command command = commands.get(choice - 1);
+            invoker.executeCommand(command, scanner, kitchen, config);
         }
     }
 

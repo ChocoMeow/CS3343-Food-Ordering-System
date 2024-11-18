@@ -22,8 +22,12 @@ public class RemoveDrinkCommand extends Command {
             "Drink Name",
             "Enter the drink item number to remove",
             config.getItems().getDrinks().stream().map(drink -> drink.getName()).collect(Collectors.toList()),
-            List.of()
+            List.of("Go Back")
         );
+
+        if (choice == config.getItems().getDrinks().size() + 1) {
+            return;
+        }
 
         config.getItems().getDrinks().remove(choice - 1);
         System.out.println("Drink item removed successfully.");

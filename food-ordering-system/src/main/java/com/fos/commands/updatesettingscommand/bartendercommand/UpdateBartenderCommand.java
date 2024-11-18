@@ -25,8 +25,12 @@ public class UpdateBartenderCommand extends Command {
             "Bartender Name",
             "Enter the bartender number to update",
             config.getBartenders().stream().map(bar -> bar.getName()).collect(Collectors.toList()),
-            List.of()
+            List.of("Go Back")
         );
+
+        if (choice == config.getBartenders().size() + 1) {
+            return;
+        }
 
         Map<String, Object> formReults = new HashMap<>();
         formReults.putAll(Utils.createInputField(scanner, "name", "Enter new name for bartender:", "String", true));

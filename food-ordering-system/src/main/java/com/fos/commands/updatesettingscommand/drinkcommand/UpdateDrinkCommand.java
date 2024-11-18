@@ -24,9 +24,13 @@ public class UpdateDrinkCommand extends Command {
             "Drink Name",
             "Enter the drink item number to update",
             config.getItems().getDrinks().stream().map(drink -> drink.getName()).collect(Collectors.toList()),
-            List.of()
+            List.of("Go Back")
         );
 
+        if (choice == config.getItems().getDrinks().size() + 1) {
+            return;
+        }
+        
         Map<String, Object> formReults = new HashMap<>();
         formReults.putAll(Utils.createInputField(scanner, "name", "Enter new name for drink item:", "String", true));
         formReults.putAll(Utils.createInputField(scanner, "price", "Enter new price for drink item:", "Float", true));

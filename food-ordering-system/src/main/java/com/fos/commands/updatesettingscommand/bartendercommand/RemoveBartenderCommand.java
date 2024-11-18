@@ -22,8 +22,12 @@ public class RemoveBartenderCommand extends Command {
             "Bartender Name",
             "Enter the bartender number to remove",
             config.getBartenders().stream().map(bar -> bar.getName()).collect(Collectors.toList()),
-            List.of()
+            List.of("Go Back")
         );
+
+        if (choice == config.getBartenders().size() + 1) {
+            return;
+        }
 
         config.getBartenders().remove(choice - 1);
         System.out.println("Bartender removed successfully.");

@@ -23,9 +23,12 @@ public class RemoveChefCommand extends Command {
             "Chef Name",
             "Enter the chef number to remove",
             config.getChefs().stream().map(chef -> chef.getName()).collect(Collectors.toList()),
-            List.of()
+            List.of("Go Back")
         );
 
+        if (choice == config.getChefs().size() + 1) {
+            return;
+        }
         config.getChefs().remove(choice - 1);
         System.out.println("Chef removed successfully.");        
     }

@@ -26,9 +26,13 @@ public class UpdateChefCommand extends Command {
             "Chef Name",
             "Enter the chef number to update",
             config.getChefs().stream().map(chef -> chef.getName()).collect(Collectors.toList()),
-            List.of()
+            List.of("Go Back")
         );
 
+        if (choice == config.getChefs().size() + 1) {
+            return;
+        }
+        
         Map<String, Object> formReults = new HashMap<>();
         formReults.putAll(Utils.createInputField(scanner, "name", "Enter new name for chef:", "String", true));
 
