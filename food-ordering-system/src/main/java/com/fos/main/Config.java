@@ -2,9 +2,12 @@ package com.fos.main;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import com.fos.worker.Chef;
@@ -19,7 +22,7 @@ import lombok.ToString;
 
 @ToString
 public class Config {
-    private static final String configPath = "./src/main/resources/Configuration.json";
+    private static final String configFileName = "Configuration.json";
 
     @SerializedName("CHEFS")
     public ArrayList<Chef> chefs;
@@ -29,12 +32,16 @@ public class Config {
 
     @SerializedName("ITEMS")
     private Items items;
-    
+
     public static Config loadConfig() {
         Gson gson = new Gson();
         Config config = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(configPath))) {
+        try (InputStream inputStream = Config.class.getClassLoader().getResourceAsStream(configFileName);
+             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            if (inputStream == null) {
+                throw new IllegalArgumentException("Config file not found: " + configFileName);
+            }
             config = gson.fromJson(br, Config.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,7 +52,8 @@ public class Config {
 
     public void saveConfig() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create(); // For pretty printing
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(configPath))) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+                Files.newOutputStream(Paths.get(getClass().getClassLoader().getResource(configFileName).getPath()))))) {
             gson.toJson(this, bw);
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,7 +63,7 @@ public class Config {
     public ArrayList<Chef> getChefs() {
         return chefs;
     }
-    
+
     public ArrayList<Bartender> getBartenders() {
         return bartenders;
     }

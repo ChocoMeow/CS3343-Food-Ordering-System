@@ -42,17 +42,11 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         List<Command> commands = new ArrayList<>(commandFactory.getAllCommands());
+        List<String> additionalCommands = List.of("Exit");
 
         while (true) {
             Utils.clearConsole();
-            System.out.println("\n--- Restaurant Simulator Menu ---");
-            for (int i = 0; i < commands.size(); i++) {
-                System.out.printf("%d. %s%n", (i + 1), commands.get(i).getCommandName());
-            }
-            System.out.println((commands.size() + 1) + ". Exit");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int choice = Utils.printMenu(scanner, commands, additionalCommands);
 
             if (choice >= 1 && choice <= commands.size()) {
                 Command command = commands.get(choice - 1);

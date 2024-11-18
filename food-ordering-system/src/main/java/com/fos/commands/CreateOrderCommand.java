@@ -14,7 +14,7 @@ import com.fos.main.Utils;
 
 public class CreateOrderCommand extends Command {
 
-    private static String commandName = "Create an order";
+    private static String commandName = "Create An Order";
 
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {

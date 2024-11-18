@@ -2,6 +2,7 @@ package com.fos.commands.updatesettingscommand.drinkcommand;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.fos.commands.Command;
 import com.fos.item.Drink;
@@ -15,22 +16,17 @@ public class RemoveDrinkCommand extends Command {
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         Utils.clearConsole();
-        System.out.printf("--- %s ---%n", commandName);
-        List<Drink> drinks = kitchen.getAvailableDrinks();
-        for (int i = 0; i < drinks.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), drinks.get(i).getName());
-        }
 
-        System.out.print("\nEnter the drink item number to remove: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int choice = Utils.createSelectionForm(
+            scanner,
+            "Drink Name",
+            "Enter the drink item number to remove",
+            config.getItems().getDrinks().stream().map(drink -> drink.getName()).collect(Collectors.toList()),
+            List.of()
+        );
 
-        if (choice > 0 && choice <= config.getItems().getDrinks().size()) {
-            config.getItems().getDrinks().remove(choice - 1);
-            System.out.println("Drink item removed successfully.");
-        } else {
-            System.out.println("Invalid choice.");
-        }
+        config.getItems().getDrinks().remove(choice - 1);
+        System.out.println("Drink item removed successfully.");
     }
 
     @Override

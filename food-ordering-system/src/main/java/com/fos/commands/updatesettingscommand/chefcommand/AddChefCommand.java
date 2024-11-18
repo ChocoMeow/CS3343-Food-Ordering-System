@@ -1,10 +1,13 @@
 package com.fos.commands.updatesettingscommand.chefcommand;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.fos.commands.Command;
 import com.fos.main.Config;
 import com.fos.main.Kitchen;
+import com.fos.main.Utils;
 import com.fos.worker.Chef;
 
 public class AddChefCommand extends Command {
@@ -13,17 +16,16 @@ public class AddChefCommand extends Command {
 
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
-        System.out.print("Enter name for new chef: ");
-        String newName = scanner.nextLine();
+        Map<String, Object> formReults = new HashMap<>();
+        formReults.putAll(Utils.createInputField(scanner, "name", "Enter name for new chef:", "String", true));
 
-        config.getChefs().add(new Chef(newName));
-        System.out.println("Chef added successfully.");
+        String name = (String) formReults.get("name");
 
-        boolean chefExists = kitchen.getChefs().stream()
-            .anyMatch(chef -> chef.getName().equalsIgnoreCase(newName));
+        boolean chefExists = config.getChefs().stream()
+            .anyMatch(chef -> chef.getName().equalsIgnoreCase(name));
 
         if (!chefExists) {
-            config.getChefs().add(new Chef(newName));
+            config.getChefs().add(new Chef(name));
             System.out.println("Chef added successfully.");
         } else {
             System.out.println("Chef name must be unique. Please try again.");

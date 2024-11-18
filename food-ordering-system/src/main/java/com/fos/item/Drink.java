@@ -59,4 +59,16 @@ public class Drink {
     public void setName(String newName) {
         this.name = newName;
     }
+
+    public void setPrice(Float newPrice) {
+        this.price = newPrice;
+    }
+
+    public void setMixingTime(Integer newMixingTime) {
+        this.mixingTime = newMixingTime;
+    }
+
+    public void setStock(Integer newStock) {
+        this.stock = newStock;
+    }
 }

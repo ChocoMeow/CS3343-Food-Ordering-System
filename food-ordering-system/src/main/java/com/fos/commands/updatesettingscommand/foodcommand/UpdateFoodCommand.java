@@ -1,7 +1,10 @@
 package com.fos.commands.updatesettingscommand.foodcommand;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.fos.commands.Command;
 import com.fos.item.Food;
@@ -15,32 +18,38 @@ public class UpdateFoodCommand extends Command {
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         Utils.clearConsole();
-        System.out.printf("--- %s ---%n", commandName);
-        List<Food> foods = kitchen.getAvailableFoods();
-        for (int i = 0; i < foods.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), foods.get(i).getName());
-        }
 
-        System.out.print("\nEnter the food item number to update: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int choice = Utils.createSelectionForm(
+            scanner,
+            "Drink Name",
+            "Enter the food item number to update",
+            config.getItems().getFoods().stream().map(food -> food.getName()).collect(Collectors.toList()),
+            List.of()
+        );
 
-        if (choice > 0 && choice <= config.getItems().getFoods().size()) {
-            System.out.print("Enter new name for food item: ");
-            String newName = scanner.nextLine();
+        Map<String, Object> formReults = new HashMap<>();
+        formReults.putAll(Utils.createInputField(scanner, "name", "Enter new name for food item:", "String", true));
+        formReults.putAll(Utils.createInputField(scanner, "price", "Enter new price for food item:", "Float", true));
+        formReults.putAll(Utils.createInputField(scanner, "cookingTime", "Enter new cooking time for food item (in seconds):", "Integer", true));
+        formReults.putAll(Utils.createInputField(scanner, "stock", "Enter new stock for food item:", "Integer", true));
 
-            boolean foodExists = kitchen.getAvailableDrinks().stream()
-                .anyMatch(food -> food.getName().equalsIgnoreCase(newName));
+        String name = (String) formReults.get("name");
+        Float price = (Float) formReults.get("price");
+        Integer cookingTime = (Integer) formReults.get("cookingTime");
+        Integer stock = (Integer) formReults.get("stock");
 
-            if (!foodExists) {
-                config.getItems().getFoods().get(choice - 1).setName(newName);
-                System.out.println("Food item name updated successfully.");
-            } else {
-                System.out.println("Food item name must be unique. Please try again.");
-            }
-            
+        boolean foodExists = kitchen.getAvailableDrinks().stream()
+            .anyMatch(food -> food.getName().equalsIgnoreCase(name));
+
+        if (!foodExists) {
+            Food food = config.getItems().getFoods().get(choice - 1);
+            food.setName(name);
+            food.setPrice(price);
+            food.setCookingTime(cookingTime);
+            food.setStock(stock);
+            System.out.println("Food item name updated successfully.");
         } else {
-            System.out.println("Invalid choice.");
+            System.out.println("Food item name must be unique. Please try again.");
         }
     }
 

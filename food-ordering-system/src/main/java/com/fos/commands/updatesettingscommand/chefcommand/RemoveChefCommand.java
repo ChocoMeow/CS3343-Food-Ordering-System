@@ -2,6 +2,7 @@ package com.fos.commands.updatesettingscommand.chefcommand;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.fos.commands.Command;
 import com.fos.main.Config;
@@ -16,22 +17,17 @@ public class RemoveChefCommand extends Command {
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         Utils.clearConsole();
-        System.out.printf("--- %s ---%n", commandName);
-        List<Chef> chefs = kitchen.getChefs();
-        for (int i = 0; i < chefs.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), chefs.get(i).getName());
-        }
 
-        System.out.print("\nEnter the chef number to remove: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int choice = Utils.createSelectionForm(
+            scanner,
+            "Chef Name",
+            "Enter the chef number to remove",
+            config.getChefs().stream().map(chef -> chef.getName()).collect(Collectors.toList()),
+            List.of()
+        );
 
-        if (choice > 0 && choice <= config.getChefs().size()) {
-            config.getChefs().remove(choice - 1);
-            System.out.println("Chef removed successfully.");
-        } else {
-            System.out.println("Invalid choice.");
-        }
+        config.getChefs().remove(choice - 1);
+        System.out.println("Chef removed successfully.");        
     }
 
     @Override

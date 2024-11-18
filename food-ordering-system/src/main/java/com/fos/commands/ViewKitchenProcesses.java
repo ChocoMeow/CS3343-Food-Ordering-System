@@ -15,7 +15,7 @@ import com.fos.worker.Chef;
 
 public class ViewKitchenProcesses extends Command {
 
-    private static String commandName = "View kitchen process list";
+    private static String commandName = "View Kitchen Process List";
     private Kitchen kitchen;
 
     @Override
@@ -36,12 +36,16 @@ public class ViewKitchenProcesses extends Command {
                 }
             }
         });
+        System.out.print("Tes3");
         refreshThread.start();
+        System.out.print("Test4");
 
         // Wait for user input to exit
         while (true) {
             scanner.nextLine();
+            System.out.print("Test");
             refreshThread.interrupt(); // Stop the refresh thread
+            System.out.print("Tes2");
             break;
         }
     }

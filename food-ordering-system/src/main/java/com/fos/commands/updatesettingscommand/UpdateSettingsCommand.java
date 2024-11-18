@@ -17,7 +17,7 @@ import com.fos.main.Utils;
 
 public class UpdateSettingsCommand extends Command {
 
-    private static String commandName = "Update settings";
+    private static String commandName = "Update Settings";
 
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config ogConfig) {
@@ -26,29 +26,27 @@ public class UpdateSettingsCommand extends Command {
         commandList.add(new BartenderMenuCommand());
         commandList.add(new FoodMenuCommand());
         commandList.add(new DrinkMenuCommand());
-        commandList.add(new SaveConfigCommand());
         
         CommandFactory commandFactory = new CommandFactory(commandList);
         CommandInvoker invoker = new CommandInvoker();
         List<Command> commands = new ArrayList<>(commandFactory.getAllCommands());
+        List<String> additionalCommands = List.of("Save Changes and Go Back", "Go Back");
 
         Config config = Config.loadConfig();
 
         while (true) {
             Utils.clearConsole();
-            System.out.println("\n--- Update Chefs Menu ---");
-            for (int i = 0; i < commands.size(); i++) {
-                System.out.printf("%d. %s%n", (i + 1), commands.get(i).getCommandName());
-            }
-            System.out.println((commands.size() + 1) + ". Go Back");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int choice = Utils.printMenu(scanner, commands, additionalCommands);
+            Utils.clearConsole();
 
             if (choice >= 1 && choice <= commands.size()) {
                 Command command = commands.get(choice - 1);
                 invoker.executeCommand(command, scanner, kitchen, config);
             } else if (choice == commands.size() + 1) {
+                config.saveConfig();
+                return;
+            }
+            else if (choice == commands.size() + 2) {
                 return;
             } else {
                 System.out.println("Invalid choice. Press Enter to continue...");

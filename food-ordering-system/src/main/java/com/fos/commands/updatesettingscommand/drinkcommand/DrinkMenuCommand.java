@@ -24,16 +24,11 @@ public class DrinkMenuCommand extends Command {
         CommandFactory commandFactory = new CommandFactory(commandList);
         CommandInvoker invoker = new CommandInvoker();
         List<Command> commands = new ArrayList<>(commandFactory.getAllCommands());
+        List<String> additionalCommands = List.of("Go Back");
 
         while (true) {
             Utils.clearConsole();
-            System.out.println("\n--- Update Foods Menu ---");
-            for (int i = 0; i < commands.size(); i++) {
-                System.out.printf("%d. %s%n", (i + 1), commands.get(i).getCommandName());
-            }
-            System.out.println((commands.size() + 1) + ". Go Back");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
+            int choice = Utils.printMenu(scanner, commands, additionalCommands);
             scanner.nextLine(); // Consume newline
 
             if (choice >= 1 && choice <= commands.size()) {

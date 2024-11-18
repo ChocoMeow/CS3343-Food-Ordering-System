@@ -1,7 +1,10 @@
 package com.fos.commands.updatesettingscommand.drinkcommand;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.fos.commands.Command;
 import com.fos.item.Drink;
@@ -15,32 +18,39 @@ public class UpdateDrinkCommand extends Command {
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         Utils.clearConsole();
-        System.out.printf("--- %s ---%n", commandName);
-        List<Drink> drinks = kitchen.getAvailableDrinks();
-        for (int i = 0; i < drinks.size(); i++) {
-            System.out.printf("%d. %s%n", (i + 1), drinks.get(i).getName());
-        }
 
-        System.out.print("\nEnter the drink item number to update: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int choice = Utils.createSelectionForm(
+            scanner,
+            "Drink Name",
+            "Enter the drink item number to update",
+            config.getItems().getDrinks().stream().map(drink -> drink.getName()).collect(Collectors.toList()),
+            List.of()
+        );
 
-        if (choice > 0 && choice <= config.getItems().getDrinks().size()) {
-            System.out.print("Enter new name for drink item: ");
-            String newName = scanner.nextLine();
-            
-            boolean drinkExists = kitchen.getAvailableDrinks().stream()
-                .anyMatch(drink -> drink.getName().equalsIgnoreCase(newName));
+        Map<String, Object> formReults = new HashMap<>();
+        formReults.putAll(Utils.createInputField(scanner, "name", "Enter new name for drink item:", "String", true));
+        formReults.putAll(Utils.createInputField(scanner, "price", "Enter new price for drink item:", "Float", true));
+        formReults.putAll(Utils.createInputField(scanner, "mixingTime", "Enter new mixing time for drink item (in seconds):", "Integer", true));
+        formReults.putAll(Utils.createInputField(scanner, "stock", "Enter new stock for drink item:", "Integer", true));
 
-            if (!drinkExists) {
-                config.getItems().getDrinks().get(choice - 1).setName(newName);
-                System.out.println("Drink item name updated successfully.");
-            } else {
-                System.out.println("Drink item name must be unique. Please try again.");
-            }
+        String name = (String) formReults.get("name");
+        Float price = (Float) formReults.get("price");
+        Integer mixingTime = (Integer) formReults.get("mixingTime");
+        Integer stock = (Integer) formReults.get("stock");
+        
+        boolean drinkExists = kitchen.getAvailableDrinks().stream()
+            .anyMatch(drink -> drink.getName().equalsIgnoreCase(name));
 
+        if (!drinkExists) {
+            Drink drink = config.getItems().getDrinks().get(choice - 1);
+            drink.setName(name);
+            drink.setPrice(price);
+            drink.setMixingTime(mixingTime);
+            drink.setStock(stock);
+
+            System.out.println("Drink item name updated successfully.");
         } else {
-            System.out.println("Invalid choice.");
+            System.out.println("Drink item name must be unique. Please try again.");
         }
     }
 

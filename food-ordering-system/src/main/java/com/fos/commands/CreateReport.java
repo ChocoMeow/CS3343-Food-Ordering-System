@@ -10,7 +10,7 @@ import com.fos.worker.Chef;
 
 public class CreateReport extends Command {
 
-    private static String commandName = "Create report";
+    private static String commandName = "Create Report";
 
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
@@ -44,7 +44,7 @@ public class CreateReport extends Command {
         }
 
         System.out.print("\nPress Enter to exit...");
-        String exit = scanner.nextLine();
+        scanner.nextLine();
     }
 
     @Override

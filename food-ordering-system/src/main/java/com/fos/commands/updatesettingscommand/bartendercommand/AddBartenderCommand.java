@@ -1,11 +1,14 @@
 package com.fos.commands.updatesettingscommand.bartendercommand;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.fos.commands.Command;
 import com.fos.main.Config;
 import com.fos.main.Kitchen;
+import com.fos.main.Utils;
 import com.fos.worker.Bartender;
 
 public class AddBartenderCommand extends Command {
@@ -14,17 +17,16 @@ public class AddBartenderCommand extends Command {
 
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
-        System.out.print("Enter name for new bartender: ");
-        String newName = scanner.nextLine();
+        Map<String, Object> formReults = new HashMap<>();
+        formReults.putAll(Utils.createInputField(scanner, "name", "Enter name for new bartender:", "String", true));
 
-        config.getBartenders().add(new Bartender(newName));
-        System.out.println("Bartender added successfully.");
+        String name = (String) formReults.get("name");
 
         boolean bartenderExists = kitchen.getBartenders().stream()
-            .anyMatch(bartender -> bartender.getName().equalsIgnoreCase(newName));
+            .anyMatch(bartender -> bartender.getName().equalsIgnoreCase(name));
 
         if (!bartenderExists) {
-            config.getBartenders().add(new Bartender(newName));
+            config.getBartenders().add(new Bartender(name));
             System.out.println("Bartender added successfully.");
         } else {
             System.out.println("Bartender name must be unique. Please try again.");
