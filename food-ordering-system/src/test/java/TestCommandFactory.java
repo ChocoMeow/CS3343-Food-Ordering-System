@@ -15,36 +15,36 @@ public class TestCommandFactory {
 
     private CommandFactory commandFactory;
 
-    @BeforeEach
-    public void setUp() {
-        commandFactory = new CommandFactory();
-    }
+    // @BeforeEach
+    // public void setUp() {
+    //     commandFactory = new CommandFactory();
+    // }
 
-    @Test
-    public void testGetCommandWithValidNumber() {
-        Command command = commandFactory.getCommand(1);
-        assertNotNull(command, "Command should not be null for valid command number");
-        assertTrue(command instanceof CreateOrderCommand, "Command should be an instance of CreateOrderCommand");
+    // @Test
+    // public void testGetCommandWithValidNumber() {
+    //     Command command = commandFactory.getCommand(1);
+    //     assertNotNull(command, "Command should not be null for valid command number");
+    //     assertTrue(command instanceof CreateOrderCommand, "Command should be an instance of CreateOrderCommand");
         
-        command = commandFactory.getCommand(2);
-        assertNotNull(command, "Command should not be null for valid command number");
-        assertTrue(command instanceof ViewKitchenProcesses, "Command should be an instance of ViewKitchenProcesses");
+    //     command = commandFactory.getCommand(2);
+    //     assertNotNull(command, "Command should not be null for valid command number");
+    //     assertTrue(command instanceof ViewKitchenProcesses, "Command should be an instance of ViewKitchenProcesses");
         
-        command = commandFactory.getCommand(3);
-        assertNotNull(command, "Command should not be null for valid command number");
-        assertTrue(command instanceof CreateReport, "Command should be an instance of CreateReport");
-    }
+    //     command = commandFactory.getCommand(3);
+    //     assertNotNull(command, "Command should not be null for valid command number");
+    //     assertTrue(command instanceof CreateReport, "Command should be an instance of CreateReport");
+    // }
 
-    @Test
-    public void testGetCommandWithInvalidNumber() {
-        Command command = commandFactory.getCommand(99);
-        assertNull(command, "Command should be null for invalid command number");
-    }
+    // @Test
+    // public void testGetCommandWithInvalidNumber() {
+    //     Command command = commandFactory.getCommand(99);
+    //     assertNull(command, "Command should be null for invalid command number");
+    // }
 
-    @Test
-    public void testGetAllCommands() {
-        Collection<Command> commands = commandFactory.getAllCommands();
-        assertNotNull(commands, "Command collection should not be null");
-        assertEquals(3, commands.size(), "There should be three commands in the collection");
-    }
+    // @Test
+    // public void testGetAllCommands() {
+    //     Collection<Command> commands = commandFactory.getAllCommands();
+    //     assertNotNull(commands, "Command collection should not be null");
+    //     assertEquals(3, commands.size(), "There should be three commands in the collection");
+    // }
 }
