@@ -36,16 +36,12 @@ public class ViewKitchenProcesses extends Command {
                 }
             }
         });
-        System.out.print("Tes3");
         refreshThread.start();
-        System.out.print("Test4");
 
         // Wait for user input to exit
         while (true) {
             scanner.nextLine();
-            System.out.print("Test");
             refreshThread.interrupt(); // Stop the refresh thread
-            System.out.print("Tes2");
             break;
         }
     }
