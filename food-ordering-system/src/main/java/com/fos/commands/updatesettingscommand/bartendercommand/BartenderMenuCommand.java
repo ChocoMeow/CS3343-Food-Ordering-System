@@ -13,7 +13,7 @@ import com.fos.main.Utils;
 
 public class BartenderMenuCommand extends Command {
 
-    private static String commandName = "Update Bartenders";
+    private static String commandName = "Bartenders Menu";
 
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {

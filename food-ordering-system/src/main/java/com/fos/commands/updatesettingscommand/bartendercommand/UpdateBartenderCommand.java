@@ -10,7 +10,6 @@ import com.fos.commands.Command;
 import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Utils;
-import com.fos.worker.Bartender;
 
 public class UpdateBartenderCommand extends Command {
 

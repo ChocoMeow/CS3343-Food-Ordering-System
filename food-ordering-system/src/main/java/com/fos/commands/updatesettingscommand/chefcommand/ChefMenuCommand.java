@@ -13,7 +13,7 @@ import com.fos.main.Utils;
 
 public class ChefMenuCommand extends Command {
 
-    private static String commandName = "Update Chefs";
+    private static String commandName = "Chefs Menu";
 
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
