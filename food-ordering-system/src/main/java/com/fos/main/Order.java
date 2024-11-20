@@ -37,6 +37,17 @@ public class Order {
         return orderTime;
     }
 
+    public float getTotalCost() {
+        float totalCost = 0;
+        for (Food food : foods) {
+            totalCost += food.getPrice();
+        }
+        for (Drink drink : drinks) {
+            totalCost += drink.getPrice();
+        }
+        return totalCost;
+    }
+
     public long getExpectedFinishTime() {
         long totalCookingTime = foods.stream().filter(f -> !f.isInStock()).mapToLong(Food::getCookingTime).sum();
         return orderTime + totalCookingTime * 1000;

@@ -3,7 +3,6 @@ package com.fos.main;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -105,12 +104,12 @@ public class Utils {
                     choice = Integer.parseInt(userInput); // Parse the string to an integer
 
                     if (choice < 1 || choice > totalOptions) {
-                        System.out.println("Invalid choice. Please enter a number between 1 and " + totalOptions + ".");
+                        System.out.println(Utils.addColor("Invalid choice. Please enter a number between 1 and " + totalOptions + ".", RED));
                     } else {
                         validInput = true;  // Input is valid, exit the loop
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a valid integer.");
+                    System.out.println(Utils.addColor("Invalid input. Please enter a valid integer.", RED));
                 }
             }
 
@@ -128,7 +127,7 @@ public class Utils {
         Object inputValue = null;
 
         while (inputValue == null) {
-            System.out.printf("%-45s%s: ", question, isRequired ? addColor("(required)", MAGENTA) : addColor("(optional)", GREEN));
+            System.out.printf("%-55s%s: ", question, isRequired ? addColor("(required)", MAGENTA) : addColor("(optional)", GREEN));
             String userInput = scanner.nextLine().trim();
 
             if (!isRequired && userInput.isEmpty()) {

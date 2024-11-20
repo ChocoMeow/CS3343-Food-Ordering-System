@@ -52,8 +52,14 @@ public class ViewKitchenProcesses extends Command {
     }
 
     private void displayKitchenProcesses() {
-        System.out.println("\nCurrent Kitchen Processes:");
-        System.out.printf("%-20s %-15s %-20s %-20s%n", "Order Time", "Waiting Time", "Expected Finish", "Details");
+        System.out.println("""
+            ▗▄▄▄▖▗▖ ▗▖▗▄▄▖ ▗▄▄▖ ▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖    ▗▖ ▗▖▗▄▄▄▖▗▄▄▄▖▗▄▄▖▗▖ ▗▖▗▄▄▄▖▗▖  ▗▖    ▗▄▄▖ ▗▄▄▖  ▗▄▖  ▗▄▄▖▗▄▄▄▖ ▗▄▄▖ ▗▄▄▖▗▄▄▄▖ ▗▄▄▖
+            ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌   ▐▛▚▖▐▌  █      ▐▌▗▞▘  █    █ ▐▌   ▐▌ ▐▌▐▌   ▐▛▚▖▐▌    ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌   ▐▌   ▐▌   ▐▌   ▐▌   
+            ▐▌   ▐▌ ▐▌▐▛▀▚▖▐▛▀▚▖▐▛▀▀▘▐▌ ▝▜▌  █      ▐▛▚▖   █    █ ▐▌   ▐▛▀▜▌▐▛▀▀▘▐▌ ▝▜▌    ▐▛▀▘ ▐▛▀▚▖▐▌ ▐▌▐▌   ▐▛▀▀▘ ▝▀▚▖ ▝▀▚▖▐▛▀▀▘ ▝▀▚▖
+            ▝▚▄▄▖▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖▐▌  ▐▌  █      ▐▌ ▐▌▗▄█▄▖  █ ▝▚▄▄▖▐▌ ▐▌▐▙▄▄▖▐▌  ▐▌    ▐▌   ▐▌ ▐▌▝▚▄▞▘▝▚▄▄▖▐▙▄▄▖▗▄▄▞▘▗▄▄▞▘▐▙▄▄▖▗▄▄▞▘
+                """);
+
+        System.out.printf(Utils.addColor("%-20s | %-15s | %-20s | %-20s%n", Utils.MAGENTA), "Order Time", "Waiting Time", "Expected Finish", "Details");
         System.out.println("-".repeat(120));
         
         if (kitchen.getOrders().isEmpty()) {
@@ -92,7 +98,7 @@ public class ViewKitchenProcesses extends Command {
         // Show bartender activity
         displayBartenderActivities();
 
-        System.out.print("\nPress 'ENTER' to exit view...");
+        System.out.print(Utils.addColor("\nPress 'ENTER' to exit view...", Utils.YELLOW));
     }
 
     private void displayCurrentOrderDetails(Order currentOrder) {
@@ -100,10 +106,10 @@ public class ViewKitchenProcesses extends Command {
             return;
         }
     
-        System.out.printf("%n%-15s%n", "Current Order");
+        System.out.printf(Utils.addColor("%n%-15s%n", Utils.MAGENTA), "Current Order");
         System.out.println("-------------------------------------");
         
-        displayItems("𓎦 Foods", currentOrder.getFoods(), kitchen.getProcessingFoodIndex());
+        displayItems("𓎦 Foods ", currentOrder.getFoods(), kitchen.getProcessingFoodIndex());
         displayItems("☕︎Drinks", currentOrder.getDrinks(), kitchen.getProcessingDrinkIndex());
     }
     
@@ -112,9 +118,9 @@ public class ViewKitchenProcesses extends Command {
         for (int i = 0; i < items.size(); i++) {
             T item = items.get(i);
             if (i < processingIndex - 1) {
-                System.out.print("[✔]");
+                System.out.print(Utils.addColor("[✔]", Utils.GREEN));
             } else if (i == processingIndex - 1) {
-                System.out.print("[↺]");
+                System.out.print(Utils.addColor("[↺]", Utils.YELLOW));
             } else {
                 System.out.print("[ ]");
             }
@@ -131,52 +137,46 @@ public class ViewKitchenProcesses extends Command {
             StringBuilder details = new StringBuilder();
     
             for (Food food : order.getFoods()) {
-                if (!food.isInStock()) {
-                    details.append("[✘]");
-                }
                 details.append(food.getName()).append(" ");
             }
             for (Drink drink : order.getDrinks()) {
-                if (!drink.isInStock()) {
-                    details.append("[✘]");
-                }
                 details.append(drink.getName()).append(" ");
             }
     
-            System.out.printf("%-20s %-15s %-20s %-20s%n",
+            System.out.printf("%-20s | %-24s | %-29s | %-20s%n",
                 Utils.formatDate(order.getOrderTime()),
-                Utils.formatTime(waitingTime),
-                Utils.formatTimeLeft(timeLeft),
+                Utils.addColor(Utils.formatTime(waitingTime), order.isEmergency() ? Utils.RED : Utils.WHITE),
+                Utils.addColor(Utils.formatTimeLeft(timeLeft), timeLeft <= 0 ? Utils.RED : Utils.WHITE),
                 details.toString().trim()
             );
         }
     }
 
     private void displayChefActivities() {
-        System.out.printf("%n%-15s %-25s %-15s%n", "Chef", "Current Task", "Time Left");
-        System.out.println("--------------------------------------------------");
+        System.out.printf(Utils.addColor("%n%-15s | %-25s %-15s%n", Utils.MAGENTA), "Chef", "Current Task", "Time Left");
+        System.out.println("-----------------------------------------------------");
         for (Chef chef : kitchen.getChefs()) {
             Food currentFood = chef.getCurrentFood();
             if (currentFood != null) {
                 long remainingTime = chef.getRemainingCookingTime();
-                System.out.printf("%-15s %-25s %-15s%n", chef.getName(), "Cooking " + currentFood.getName(), Utils.formatTime(remainingTime));
+                System.out.printf("%-15s | %-34s %-15s%n", chef.getName(), Utils.addColor("Cooking " + currentFood.getName(), Utils.BLUE), Utils.formatTime(remainingTime));
             } else {
-                System.out.printf("%-15s %-25s %-15s%n", chef.getName(), "Free", "N/A");
+                System.out.printf("%-15s | %-34s %-15s%n", chef.getName(), Utils.addColor("Free", Utils.GREEN), "N/A");
             }
         }
     }
     
     private void displayBartenderActivities() {
-        System.out.printf("%n%-15s %-25s %-15s%n", "Bartender", "Current Task", "Time Left");
-        System.out.println("--------------------------------------------------");
+        System.out.printf(Utils.addColor("%n%-15s | %-25s %-15s%n", Utils.MAGENTA), "Bartender", "Current Task", "Time Left");
+        System.out.println("-----------------------------------------------------");
         
         for (Bartender bartender : kitchen.getBartenders()) {
             Drink currentDrink = bartender.getCurrentDrink();
             if (currentDrink != null) {
                 long remainingTime = bartender.getRemainingMixingTime();
-                System.out.printf("%-15s %-25s %-15s%n", bartender.getName(), "Mixing " + currentDrink.getName(), Utils.formatTime(remainingTime));
+                System.out.printf("%-15s | %-34s %-15s%n", bartender.getName(), Utils.addColor("Mixing " + currentDrink.getName(), Utils.BLUE), Utils.formatTime(remainingTime));
             } else {
-                System.out.printf("%-15s %-25s %-15s%n", bartender.getName(), "Free", "N/A");
+                System.out.printf("%-15s | %-34s %-15s%n", bartender.getName(), Utils.addColor("Free", Utils.GREEN), "N/A");
             }
         }
     }

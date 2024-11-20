@@ -23,106 +23,99 @@ public class CreateOrderCommand extends Command {
     
         while (ordering) {
             Utils.clearConsole(); // Clear console when creating an order
-    
+            
+            System.out.println("""
+                ▗▄▄▄▖▗▄▄▖ ▗▄▄▄▖ ▗▄▖▗▄▄▄▖▗▄▄▄▖     ▗▄▖ ▗▄▄▖ ▗▄▄▄ ▗▄▄▄▖▗▄▄▖ 
+                ▐▌   ▐▌ ▐▌▐▌   ▐▌ ▐▌ █  ▐▌       ▐▌ ▐▌▐▌ ▐▌▐▌  █▐▌   ▐▌ ▐▌
+                ▐▌   ▐▛▀▚▖▐▛▀▀▘▐▛▀▜▌ █  ▐▛▀▀▘    ▐▌ ▐▌▐▛▀▚▖▐▌  █▐▛▀▀▘▐▛▀▚▖
+                ▝▚▄▄▖▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌ █  ▐▙▄▄▖    ▝▚▄▞▘▐▌ ▐▌▐▙▄▄▀▐▙▄▄▖▐▌ ▐▌
+                    """);
+
             // Show current shopping list
-            System.out.println("\n--- Current Shopping List ---");
+            Map<String, Integer> foodCount = new HashMap<>();
+            Map<String, Integer> drinkCount = new HashMap<>();
+
             if (!order.getFoods().isEmpty()) {
-                System.out.println("Foods:");
-                Map<String, Integer> foodCount = new HashMap<>();
                 for (Food food : order.getFoods()) {
                     foodCount.put(food.getName(), foodCount.getOrDefault(food.getName(), 0) + 1);
                 }
-                foodCount.forEach((name, count) -> System.out.printf("  - [%s] x%d%n", name, count));
             }
             if (!order.getDrinks().isEmpty()) {
-                System.out.println("Drinks:");
-                Map<String, Integer> drinkCount = new HashMap<>();
                 for (Drink drink : order.getDrinks()) {
                     drinkCount.put(drink.getName(), drinkCount.getOrDefault(drink.getName(), 0) + 1);
                 }
-                drinkCount.forEach((name, count) -> System.out.printf("  - [%s] x%d%n", name, count));
             }
     
-            System.out.println("\n--- Create Order ---");
-            System.out.println("Available Foods:");
             List<Food> foods = kitchen.getAvailableFoods();
-            System.out.printf("%-5s %-20s %-15s %-10s%n", "No", "Name", "Cooking Time", "In Stock");
-            System.out.println("-----------------------------------------------------------");
+            System.out.printf(Utils.addColor("%-5s | %-20s | %-5s | %-12s | (HKD) %-10s%n", Utils.MAGENTA), "No", "Available Food", "Items", "Cooking Time", "Price");
+            System.out.println("---------------------------------------------------------------------");
             for (int i = 0; i < foods.size(); i++) {
                 Food food = foods.get(i);
-                System.out.printf("%-5d %-20s %-15d %-10s%n", i + 1, food.getName(),
-                        food.getCookingTime(), food.isInStock() ? "Yes" : "No");
+                System.out.printf("%-14s | %-20s | %-14s | %-12s | $ %-10s%n",
+                    Utils.addColor(i + 1 + ".", Utils.CYAN),
+                    food.getName(),
+                    foodCount.getOrDefault(food.getName(), 0) == 0 ? Utils.addColor("---", Utils.WHITE) : "x " + Utils.addColor(String.valueOf(foodCount.get(food.getName())), Utils.GREEN),
+                    food.getCookingTime() + " s",
+                    food.getPrice()
+                );
             }
-    
-            System.out.println("\nAvailable Drinks:");
+            System.out.println("---------------------------------------------------------------------\n");
+            
             List<Drink> drinks = kitchen.getAvailableDrinks();
-            System.out.printf("%-5s %-20s %-10s%n", "No", "Name", "In Stock");
-            System.out.println("--------------------------------------");
+            System.out.printf(Utils.addColor("%-5s | %-20s | %-5s | %-12s | (HKD) %-10s%n", Utils.MAGENTA), "No", "Available Drink", "Items", "Cooking Time", "Price");
+            System.out.println("---------------------------------------------------------------------");
             for (int i = 0; i < drinks.size(); i++) {
                 Drink drink = drinks.get(i);
-                System.out.printf("%-5d %-20s %-10s%n", i + 1, drink.getName(),
-                        drink.isInStock() ? "Yes" : "No");
+                System.out.printf("%-14s | %-20s | %-14s | %-12s | $ %-10s%n",
+                    Utils.addColor(i + 1 + ".", Utils.CYAN),
+                    drink.getName(),
+                    drinkCount.getOrDefault(drink.getName(), 0) == 0 ? Utils.addColor("---", Utils.WHITE) : "x " + Utils.addColor(String.valueOf(drinkCount.get(drink.getName())), Utils.GREEN),
+                    drink.getMixingTime() + " s",
+                    drink.getPrice()
+                );
             }
-    
-            // Adding food to the order
-            boolean validFoodSelection = false;
-            boolean validDrinkSelection = false;
-            while (!validFoodSelection) {
-                System.out.print("Enter food number to add (or type 'd' to finish): ");
-                String foodChoice = scanner.nextLine();
+            System.out.println("---------------------------------------------------------------------\n");
+
+            System.out.printf(Utils.addColor("%n%-22s:", Utils.YELLOW) + " %s%n", "Predicted Finish Time", Utils.formatTimeLeft(order.getExpectedFinishTime() - System.currentTimeMillis()));
+            System.out.printf(Utils.addColor("%-22s:", Utils.YELLOW) + " %d%n", "Total Items", order.getFoods().size() + order.getDrinks().size());
+            System.out.printf(Utils.addColor("%-22s:", Utils.YELLOW) + " $%.2f%n", "Total Cost", order.getTotalCost());
+            
+            Map<String, Object> formReults = new HashMap<>();
+            formReults.putAll(Utils.createInputField(scanner, "foodChoice", "\nEnter food number to add (or type '0' to finish):", "Integer", false));
+            Integer foodChoice = (Integer) formReults.get("foodChoice");
+
+            if (foodChoice != null) {
+                if (foodChoice == 0) {
+                    ordering = false;
+                    break;
+                }
+
+                int foodIndex = foodChoice - 1;
+                if (foodIndex >= 0 && foodIndex < foods.size()) {
+                    Food selectedFood = foods.get(foodIndex);
+                    order.addFood(selectedFood);
+                    System.out.println(Utils.addColor(selectedFood.getName() + " added to the order.", Utils.GREEN));
+                } else {
+                    System.out.println(Utils.addColor("Invalid food selection. Please try again.", Utils.RED));
+                }
                 
-                if (foodChoice.equalsIgnoreCase("d")) {
-                    ordering = false;
-                    validDrinkSelection = true;
-                    break;
-                }
-
-                if (foodChoice.isEmpty()) { // 处理直接按回车的情况
-                    break;  // 退出当前循环，进入下一个选择
-                }
-
-                try {
-                    int foodIndex = Integer.parseInt(foodChoice) - 1;
-                    if (foodIndex >= 0 && foodIndex < foods.size()) {
-                        Food selectedFood = foods.get(foodIndex);
-                        order.addFood(selectedFood);
-                        System.out.println(selectedFood.getName() + " added to the order.");
-                        validFoodSelection = true;  // 成功添加食物后，继续询问下一个食物
-                    } else {
-                        System.out.println("Invalid food selection. Please try again.");
-                        // validFoodSelection 保持为 false，循环会继续
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid number.");
-                    // validFoodSelection 保持为 false，循环会继续
-                }
             }
 
-            // Adding drink to the order
-            while (!validDrinkSelection) {
-                System.out.print("Enter drink number to add (or type 'd' to finish): ");
-                String drinkChoice = scanner.nextLine();
-                if (drinkChoice.equalsIgnoreCase("d")) {
+            formReults.putAll(Utils.createInputField(scanner, "drinkChoice", "Enter drink number to add (or type '0' to finish):", "Integer", false)); 
+            Integer drinkChoice = (Integer) formReults.get("drinkChoice");
+            if (drinkChoice != null) {
+                if (drinkChoice == 0) {
                     ordering = false;
                     break;
                 }
 
-                if (drinkChoice.isEmpty()) { // 处理直接按回车的情况
-                    break;  // 退出当前循环，进入下一个选择
-                }
-        
-                try {
-                    int drinkIndex = Integer.parseInt(drinkChoice) - 1;
-                    if (drinkIndex >= 0 && drinkIndex < drinks.size()) {
-                        Drink selectedDrink = drinks.get(drinkIndex);
-                        order.addDrink(selectedDrink);
-                        System.out.println(selectedDrink.getName() + " added to the order.");
-                        validDrinkSelection = true; 
-                    } else {
-                        System.out.println("Invalid drink selection. Try again.");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid number.");
+                int drinkIndex = drinkChoice - 1;
+                if (drinkIndex >= 0 && drinkIndex < drinks.size()) {
+                    Drink selectedDrink = drinks.get(drinkIndex);
+                    order.addDrink(selectedDrink);
+                    System.out.println(Utils.addColor(selectedDrink.getName() + " added to the order.", Utils.GREEN));
+                } else {
+                    System.out.println(Utils.addColor("Invalid drink selection. Try again.", Utils.RED));
                 }
             }
         }
