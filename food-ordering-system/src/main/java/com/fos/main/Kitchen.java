@@ -18,7 +18,6 @@ public class Kitchen {
     private Order processingOrder = null;
 
     private int totalHandledOrder = 0;
-    private float totalProfit = 0;
 
     private int lastChefIndex = 0; // Track the last assigned chef
     private int lastBartenderIndex = 0; // Track the last assigned bartender
@@ -29,6 +28,8 @@ public class Kitchen {
 
     private List<Food> availableFoods;
     private List<Drink> availableDrinks;
+
+    private HashMap<String, Integer> historyItems = new HashMap<>();
 
     public Kitchen(Config config) {
         this.chefs = config.getChefs();
@@ -71,8 +72,8 @@ public class Kitchen {
                             } else {
                                 chef.cook(food);
                             }
-                            totalProfit += food.getPrice();
                             processingFoodIndex++;
+                            historyItems.put(food.getName(), historyItems.getOrDefault(food.getName(), 0) + 1);
 
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
@@ -97,8 +98,8 @@ public class Kitchen {
                             } else {
                                 bartender.mix(drink);
                             }
-                            totalProfit += drink.getPrice();
                             processingDrinkIndex++;
+                            historyItems.put(drink.getName(), historyItems.getOrDefault(drink.getName(), 0) + 1);
 
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
@@ -165,7 +166,25 @@ public class Kitchen {
     public List<Bartender> getBartenders() {
         return bartenders;
     }
+    
+    public Food getFood(String name) {
+        for (Food food : availableFoods) {
+            if (food.getName().equalsIgnoreCase(name)) {
+                return food;
+            }
+        }
+        return null;
+    }
 
+    public Drink getDrink(String name) {
+        for (Drink drink : availableDrinks) {
+            if (drink.getName().equalsIgnoreCase(name)) {
+                return drink;
+            }
+        }
+        return null;
+    }
+    
     public List<Food> getAvailableFoods() {
         return availableFoods;
     }
@@ -182,15 +201,15 @@ public class Kitchen {
         return processingDrinkIndex;
     }
 
-    public float getTotalProfit() {
-        return totalProfit;
-    }
-
     public long getTotalWaitingTime() {
         return totalWaitingTime;
     }
 
     public int getTotalHandledOrder() {
         return totalHandledOrder;
+    }
+
+    public HashMap<String, Integer> getHistoryItems() {
+        return this.historyItems;
     }
 }

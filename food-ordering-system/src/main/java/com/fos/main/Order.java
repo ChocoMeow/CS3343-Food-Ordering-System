@@ -48,9 +48,14 @@ public class Order {
         return totalCost;
     }
 
-    public long getExpectedFinishTime() {
+    public long getTotalPerparingTime() {
         long totalCookingTime = foods.stream().filter(f -> !f.isInStock()).mapToLong(Food::getCookingTime).sum();
-        return orderTime + totalCookingTime * 1000;
+        long totalMixingTime = drinks.stream().filter(f -> !f.isInStock()).mapToLong(Drink::getMixingTime).sum();
+        return (totalCookingTime * 1000) + (totalMixingTime * 1000);
+    }
+
+    public long getExpectedFinishTime() {
+        return orderTime + this.getTotalPerparingTime();
     }
 
     public long getWaitingTime() {

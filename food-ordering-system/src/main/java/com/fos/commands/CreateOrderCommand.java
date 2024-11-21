@@ -76,7 +76,7 @@ public class CreateOrderCommand extends Command {
             }
             System.out.println("---------------------------------------------------------------------\n");
 
-            System.out.printf(Utils.addColor("%n%-22s:", Utils.YELLOW) + " %s%n", "Predicted Finish Time", Utils.formatTimeLeft(order.getExpectedFinishTime() - System.currentTimeMillis()));
+            System.out.printf(Utils.addColor("%n%-22s:", Utils.YELLOW) + " %s%n", "Predicted Finish Time", Utils.formatTimeLeft(order.getTotalPerparingTime()));
             System.out.printf(Utils.addColor("%-22s:", Utils.YELLOW) + " %d%n", "Total Items", order.getFoods().size() + order.getDrinks().size());
             System.out.printf(Utils.addColor("%-22s:", Utils.YELLOW) + " $%.2f%n", "Total Cost", order.getTotalCost());
             
