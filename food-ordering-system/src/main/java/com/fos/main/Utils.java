@@ -125,15 +125,21 @@ public class Utils {
     public static Map<String, Object> createInputField(Scanner scanner, String fieldName, String question, String inputType, boolean isRequired) {
         Map<String, Object> result = new HashMap<>();
         Object inputValue = null;
-
+    
         while (inputValue == null) {
             System.out.printf("%-55s%s: ", question, isRequired ? addColor("(required)", MAGENTA) : addColor("(optional)", GREEN));
             String userInput = scanner.nextLine().trim();
-
-            if (!isRequired && userInput.isEmpty()) {
-                return new HashMap<>(); // Return empty map for optional input
+    
+            // Handle required input
+            if (isRequired && userInput.isEmpty()) {
+                System.out.println(addColor("This field is required. Please provide a value.", RED));
+                continue; // Prompt again for required input
             }
-
+    
+            if (!isRequired && userInput.isEmpty()) {
+                return result; // Return empty map for optional input
+            }
+    
             try {
                 switch (inputType.toLowerCase()) {
                     case "string":
@@ -153,7 +159,7 @@ public class Utils {
                         break;
                     default:
                         System.out.println(addColor("Unsupported input type. Please use 'String', 'Float', or 'Integer'.", RED));
-                        inputValue = null;
+                        inputValue = null; // Reset for retry
                         break;
                 }
             } catch (NumberFormatException e) {
@@ -169,7 +175,7 @@ public class Utils {
                 inputValue = null; // Reset inputValue for retry
             }
         }
-
+    
         result.put(fieldName, inputValue);
         return result;
     }
