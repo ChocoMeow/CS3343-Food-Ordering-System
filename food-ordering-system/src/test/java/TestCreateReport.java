@@ -47,7 +47,7 @@ public class TestCreateReport {
 
         // Mock kitchen behavior
         when(kitchen.getTotalHandledOrder()).thenReturn((int) 5L);
-        when(kitchen.getTotalProfit()).thenReturn((float) 1000.00);
+        // when(kitchen.getTotalProfit()).thenReturn((float) 1000.00);
         when(kitchen.getTotalWaitingTime()).thenReturn(30000L); // 30 seconds total waiting time
         when(kitchen.getChefs()).thenReturn(Arrays.asList(chef1, chef2));
         when(kitchen.getBartenders()).thenReturn(Arrays.asList(bartender1, bartender2));
