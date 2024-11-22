@@ -101,7 +101,7 @@ public class ViewKitchenProcesses extends Command {
         System.out.print(Utils.addColor("\nPress 'ENTER' to exit view...", Utils.YELLOW));
     }
 
-    private void displayCurrentOrderDetails(Order currentOrder) {
+    public void displayCurrentOrderDetails(Order currentOrder) {
         if (currentOrder == null) {
             return;
         }

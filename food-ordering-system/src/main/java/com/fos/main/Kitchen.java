@@ -11,6 +11,14 @@ import com.fos.item.Food;
 import com.fos.worker.Bartender;
 import com.fos.worker.Chef;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+
 public class Kitchen {
     private final List<Chef> chefs;
     private final List<Bartender> bartenders;
@@ -129,7 +137,7 @@ public class Kitchen {
         bartenderExecutor.shutdown();
     }
 
-    private Chef findAvailableChef() {
+    public Chef findAvailableChef() {
         for (int i = 0; i < chefs.size(); i++) {
             int index = (lastChefIndex + i) % chefs.size();
             if (!chefs.get(index).isBusy()) {
@@ -140,7 +148,7 @@ public class Kitchen {
         return null; // No available chefs
     }
 
-    private Bartender findAvailableBartender() {
+    public Bartender findAvailableBartender() {
         for (int i = 0; i < bartenders.size(); i++) {
             int index = (lastBartenderIndex + i) % bartenders.size();
             if (!bartenders.get(index).isBusy()) {

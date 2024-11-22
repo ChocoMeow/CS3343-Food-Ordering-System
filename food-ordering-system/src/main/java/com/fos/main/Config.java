@@ -28,11 +28,11 @@ public class Config {
     public ArrayList<Chef> chefs;
 
     @SerializedName("BARTENDERS")
-    private ArrayList<Bartender> bartenders;
+    public ArrayList<Bartender> bartenders;
 
     @SerializedName("ITEMS")
-    private Items items;
-
+    public Items items;
+    
     public static Config loadConfig() {
         Gson gson = new Gson();
         Config config = null;
@@ -74,10 +74,10 @@ public class Config {
 
     public static class Items {
         @SerializedName("FOOD")
-        private ArrayList<Food> food;
+        public ArrayList<Food> food;
 
         @SerializedName("DRINK")
-        private ArrayList<Drink> drink;
+        public ArrayList<Drink> drink;
 
         public ArrayList<Food> getFoods() {
             return food;
