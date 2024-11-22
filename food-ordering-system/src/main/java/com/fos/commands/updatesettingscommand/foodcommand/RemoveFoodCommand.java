@@ -30,7 +30,7 @@ public class RemoveFoodCommand extends Command {
         }
 
         config.getItems().getFoods().remove(choice - 1);
-        System.out.println("Food item removed successfully.");
+        System.out.println(Utils.addColor("Food item removed successfully.", Utils.GREEN));
     }
 
     @Override

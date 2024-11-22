@@ -30,7 +30,7 @@ public class RemoveBartenderCommand extends Command {
         }
 
         config.getBartenders().remove(choice - 1);
-        System.out.println("Bartender removed successfully.");
+        System.out.println(Utils.addColor("Bartender removed successfully.", Utils.GREEN));
     }
 
     @Override

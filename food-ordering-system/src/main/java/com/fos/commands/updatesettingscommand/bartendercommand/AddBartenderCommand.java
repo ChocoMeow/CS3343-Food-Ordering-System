@@ -27,9 +27,9 @@ public class AddBartenderCommand extends Command {
 
         if (!bartenderExists) {
             config.getBartenders().add(new Bartender(name));
-            System.out.println("Bartender added successfully.");
+            System.out.println(Utils.addColor("Bartender added successfully.", Utils.GREEN));
         } else {
-            System.out.println("Bartender name must be unique. Please try again.");
+            System.out.println(Utils.addColor("Bartender name must be unique. Please try again.", Utils.RED));
         }
         
     }

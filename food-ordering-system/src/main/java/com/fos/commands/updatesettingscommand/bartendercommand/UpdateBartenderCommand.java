@@ -41,9 +41,9 @@ public class UpdateBartenderCommand extends Command {
 
         if (!bartenderExists) {
             config.getBartenders().get(choice - 1).setName(name);
-            System.out.println("Bartender name updated successfully.");
+            System.out.println(Utils.addColor("Bartender name updated successfully.", Utils.GREEN));
         } else {
-            System.out.println("Bartender name must be unique. Please try again.");
+            System.out.println(Utils.addColor("Bartender name must be unique. Please try again.", Utils.RED));
         }
     }
 

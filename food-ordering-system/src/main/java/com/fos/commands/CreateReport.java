@@ -21,6 +21,14 @@ public class CreateReport extends Command {
     @Override
     public void execute(Scanner scanner, Kitchen kitchen, Config config) {
         Utils.clearConsole();
+        
+        String title = """
+        ▗▄▄▖ ▗▄▄▄▖▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖
+        ▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  
+        ▐▛▀▚▖▐▛▀▀▘▐▛▀▘ ▐▌ ▐▌▐▛▀▚▖ █  
+        ▐▌ ▐▌▐▙▄▄▖▐▌   ▝▚▄▞▘▐▌ ▐▌ █
+                """;
+        System.out.println(title);
         System.out.printf(Utils.addColor("%n%-22s:", Utils.YELLOW) + " %s", "Total Handled Orders", kitchen.getTotalHandledOrder());
 
         float totalProfit = 0;

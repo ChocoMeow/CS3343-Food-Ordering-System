@@ -30,7 +30,7 @@ public class RemoveChefCommand extends Command {
             return;
         }
         config.getChefs().remove(choice - 1);
-        System.out.println("Chef removed successfully.");        
+        System.out.println(Utils.addColor("Chef removed successfully.", Utils.GREEN));        
     }
 
     @Override

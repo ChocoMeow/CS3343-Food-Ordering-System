@@ -43,9 +43,9 @@ public class UpdateChefCommand extends Command {
 
         if (!chefExists) {
             config.getChefs().get(choice - 1).setName(name);
-            System.out.println("Chef name updated successfully.");
+            System.out.println(Utils.addColor("Chef name updated successfully.", Utils.GREEN));
         } else {
-            System.out.println("Chef name must be unique. Please try again.");
+            System.out.println(Utils.addColor("Chef name must be unique. Please try again.", Utils.RED));
         }
     }
     

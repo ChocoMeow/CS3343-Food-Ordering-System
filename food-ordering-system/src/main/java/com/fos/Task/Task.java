@@ -1,4 +1,4 @@
-package com.fos.Task;
+package com.fos.task;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;

@@ -26,9 +26,9 @@ public class AddChefCommand extends Command {
 
         if (!chefExists) {
             config.getChefs().add(new Chef(name));
-            System.out.println("Chef added successfully.");
+            System.out.println(Utils.addColor("Chef added successfully.", Utils.GREEN));
         } else {
-            System.out.println("Chef name must be unique. Please try again.");
+            System.out.println(Utils.addColor("Chef name must be unique. Please try again.", Utils.RED));
         }
     }
 

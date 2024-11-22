@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.fos.Task.Task;
 import com.fos.commands.Command;
 import com.fos.commands.CreateOrderCommand;
 import com.fos.commands.CreateReport;
 import com.fos.commands.ViewKitchenProcesses;
 import com.fos.commands.updatesettingscommand.UpdateSettingsCommand;
+import com.fos.task.Task;
 
 public class Main {
     public static Kitchen kitchen;

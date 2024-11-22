@@ -31,9 +31,9 @@ public class AddDrinkCommand extends Command {
 
         if (!drinkExists) {
             config.getItems().getDrinks().add(new Drink(name, price, mixingTime, stock));
-            System.out.println("Drink item added successfully.");
+            System.out.println(Utils.addColor("Drink item added successfully.", Utils.GREEN));
         } else {
-            System.out.println("Drink item name must be unique. Please try again.");
+            System.out.println(Utils.addColor("Drink item name must be unique. Please try again.", Utils.RED));
         }
     }
 

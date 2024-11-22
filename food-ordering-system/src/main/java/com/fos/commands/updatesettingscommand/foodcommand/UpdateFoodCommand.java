@@ -11,6 +11,7 @@ import com.fos.item.Food;
 import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Utils;
+import com.stripe.net.Webhook.Util;
 
 public class UpdateFoodCommand extends Command {
     private String commandName = "Update Foods";
@@ -51,9 +52,9 @@ public class UpdateFoodCommand extends Command {
             food.setPrice(price);
             food.setCookingTime(cookingTime);
             food.setStock(stock);
-            System.out.println("Food item name updated successfully.");
+            System.out.println(Utils.addColor("Food item name updated successfully.", Utils.GREEN));
         } else {
-            System.out.println("Food item name must be unique. Please try again.");
+            System.out.println(Utils.addColor("Food item name must be unique. Please try again.", Utils.RED));
         }
     }
 

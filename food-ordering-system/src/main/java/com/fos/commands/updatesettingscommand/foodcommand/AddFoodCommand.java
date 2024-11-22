@@ -31,9 +31,9 @@ public class AddFoodCommand extends Command {
                 (Integer) formReults.get("cookingTime"),
                 (Integer) formReults.get("stock")
             ));
-            System.out.println("Food item added successfully.");
+            System.out.println(Utils.addColor("Food item added successfully.", Utils.GREEN));
         } else {
-            System.out.println("Food item name must be unique. Please try again.");
+            System.out.println(Utils.addColor("Food item name must be unique. Please try again.", Utils.RED));
         }
     }
 
