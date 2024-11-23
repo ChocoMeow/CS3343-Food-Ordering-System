@@ -1,119 +1,114 @@
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import com.fos.commands.CreateOrderCommand;
 import com.fos.item.Drink;
 import com.fos.item.Food;
+import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Order;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Scanner;
 
-public class TestCreateOrderCommand  {
+import static org.junit.jupiter.api.Assertions.*;
 
-    @InjectMocks
+class TestCreateOrderCommand  {
+
     private CreateOrderCommand createOrderCommand;
-
-    @Mock
     private Kitchen kitchen;
 
-    @Mock
-    private Food food1;
-
-    @Mock
-    private Food food2;
-
-    @Mock
-    private Drink drink1;
-
-    @Mock
-    private Drink drink2;
-
-    private ByteArrayOutputStream outputStream;
-
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        outputStream = new ByteArrayOutputStream();
+    void setUp() {
+        createOrderCommand = new CreateOrderCommand();
+        kitchen = new Kitchen(new Config().loadConfig()); // Assuming Config initializes necessary components
+        setupSampleData();
+    }
+
+    private void setupSampleData() {
+        // Create sample food and drink items
+        Food food1 = new Food("Pizza", 12.0f, 30, 10);
+        Food food2 = new Food("Burger", 8.0f, 20, 15);
+        Drink drink1 = new Drink("Coke", 2.5f, 500, 30);
+        Drink drink2 = new Drink("Sprite", 2.0f, 500, 25);
+
+        // Add food and drinks to the kitchen
+        kitchen.getAvailableFoods().add(food1);
+        kitchen.getAvailableFoods().add(food2);
+        kitchen.getAvailableDrinks().add(drink1);
+        kitchen.getAvailableDrinks().add(drink2);
+    }
+
+    @Test
+    void testCreateOrderWithItems() throws InterruptedException {
+        // Capture the output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outputStream));
 
-        // Mock food and drink behavior
-        when(food1.getName()).thenReturn("Pizza");
-        when(food1.getCookingTime()).thenReturn(15);
-        when(food1.isInStock()).thenReturn(true);
+        // Simulate user input for the scanner
+        String simulatedInput = "1\n1\n0\n"; // Add Pizza, then Coke, then finish
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
 
-        when(food2.getName()).thenReturn("Pasta");
-        when(food2.getCookingTime()).thenReturn(10);
-        when(food2.isInStock()).thenReturn(true);
+        // Create a scanner for input
+        Scanner scanner = new Scanner(System.in);
 
-        when(drink1.getName()).thenReturn("Coke");
-        when(drink1.isInStock()).thenReturn(true);
+        // Execute the command
+        createOrderCommand.execute(scanner, kitchen, new Config());
 
-        when(drink2.getName()).thenReturn("Water");
-        when(drink2.isInStock()).thenReturn(true);
+        // Restore the original System.out
+        System.setOut(originalOut);
+        
+        // Get the output as a String
+        String output = outputStream.toString();
 
-        // Mock kitchen's available foods and drinks
-        when(kitchen.getAvailableFoods()).thenReturn(Arrays.asList(food1, food2));
-        when(kitchen.getAvailableDrinks()).thenReturn(Arrays.asList(drink1, drink2));
+        // Verify the order was placed
+        assertEquals(1, kitchen.getOrders().size());
+
+        // Check the details of the order
+        // Order order = kitchen.getOrders().get(0);
+        // assertEquals(1, order.getFoods().size());
+        // assertEquals(1, order.getDrinks().size());
+        // assertEquals("Pizza", order.getFoods().get(0).getName());
+        // assertEquals("Coke", order.getDrinks().get(0).getName());
+
+        // Check output contains confirmation messages
+        // assertTrue(output.contains("Pizza added to the order."));
+        // assertTrue(output.contains("Coke added to the order."));
     }
 
     @Test
-    public void testExecute() {
-        // Simulate user input for food and drink selection
-        // Scanner scanner = new Scanner("1\nd\n1\nd\n"); // Select food 1, finish food selection, select drink 1, finish drink selection
+    void testCreateOrderWithNoItems() throws InterruptedException {
+        // Capture the output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outputStream));
 
-        // // Execute the command
-        // createOrderCommand.execute(scanner, kitchen);
-        
-        // // Use ArgumentCaptor to capture the Order passed to placeOrder
-        // ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
-        // verify(kitchen).placeOrder(orderCaptor.capture());
-        
-        // // Get the captured order
-        // Order capturedOrder = orderCaptor.getValue();
-        
-        // // Check the contents of the captured order
-        // assertNotNull(capturedOrder);
-        // assertEquals(1, capturedOrder.getFoods().size());
-        // assertEquals("Pizza", capturedOrder.getFoods().get(0).getName());
-        // assertEquals(0, capturedOrder.getDrinks().size());
-        // // assertEquals("Coke", capturedOrder.getDrinks().get(0).getName());
-        
-        // // Capture the output
-        // String output = outputStream.toString();
-        // assertTrue(output.contains("Pizza added to the order."), "Output should indicate that Pizza was added.");
-        // assertFalse(output.contains("Coke added to the order."), "Output should indicate that Coke was added.");
-        
-        // // Clean up
-        // scanner.close();
-    }
+        // Simulate user input for the scanner
+        String simulatedInput = "0\n0\n"; // Finish without adding anything
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
 
-    @Test
-    public void testExecuteNoItems() {
-        // Simulate user input to skip adding any items
-        // Scanner scanner = new Scanner("d\nd\n"); // Directly finish food and drink selection
+        // Create a scanner for input
+        Scanner scanner = new Scanner(System.in);
 
-        // // Execute the command
-        // createOrderCommand.execute(scanner, kitchen);
+        // Execute the command
+        createOrderCommand.execute(scanner, kitchen, new Config());
 
-        // // Verify that no order was placed in the kitchen
-        // verify(kitchen, never()).placeOrder(any(Order.class));
+        // Restore the original System.out
+        System.setOut(originalOut);
 
-        // // Capture the output
-        // String output = outputStream.toString();
-        // assertTrue(output.contains("No items in the order. Order cancelled."), "Output should indicate that order was cancelled.");
+        // Get the output as a String
+        String output = outputStream.toString();
 
-        // // Clean up
-        // scanner.close();
+        // Verify that no order was placed
+        assertTrue(kitchen.getOrders().isEmpty());
+
+        // Check output contains cancellation message
+        assertTrue(output.contains("No items in the order. Order cancelled."));
     }
 }

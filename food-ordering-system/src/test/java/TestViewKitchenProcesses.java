@@ -1,109 +1,132 @@
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import com.fos.commands.ViewKitchenProcesses;
 import com.fos.item.Drink;
 import com.fos.item.Food;
+import com.fos.main.Config;
 import com.fos.main.Kitchen;
 import com.fos.main.Order;
-import com.fos.worker.Bartender;
-import com.fos.worker.Chef;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Scanner;
 
-public class TestViewKitchenProcesses {
+import static org.junit.jupiter.api.Assertions.*;
 
-    @InjectMocks
+class TestViewKitchenProcesses  {
+
     private ViewKitchenProcesses viewKitchenProcesses;
-
-    @Mock
     private Kitchen kitchen;
 
-    @Mock
-    private Order order;
+    @BeforeEach
+    void setUp() {
+        viewKitchenProcesses = new ViewKitchenProcesses();
+        kitchen = new Kitchen(new Config().loadConfig()); // Assuming Config initializes necessary components
+        setupSampleData();
+    }
 
-    @Mock
-    private Chef chef;
+    private void setupSampleData() {
+        // Create sample food and drink items
+        Food food1 = new Food("Pizza", 12.0f, 30, 10);
+        Food food2 = new Food("Burger", 8.0f, 20, 15);
+        Drink drink1 = new Drink("Coke", 2.5f, 500, 30);
+        Drink drink2 = new Drink("Sprite", 2.0f, 500, 25);
 
-    @Mock
-    private Bartender bartender;
+        // Add food and drinks to the kitchen
+        kitchen.getAvailableFoods().add(food1);
+        kitchen.getAvailableFoods().add(food2);
+        kitchen.getAvailableDrinks().add(drink1);
+        kitchen.getAvailableDrinks().add(drink2);
 
-    private ByteArrayOutputStream outputStream;
+        // Create sample orders
+        Order order1 = new Order();
+        order1.addFood(food1);
+        order1.addDrink(drink1);
+        order1.addFood(food2); // Additional item for variety
 
-    // @BeforeEach
-    // public void setUp() {
-    //     MockitoAnnotations.openMocks(this);
-    //     outputStream = new ByteArrayOutputStream();
-    //     System.setOut(new PrintStream(outputStream));
+        Order order2 = new Order();
+        order2.addFood(food2);
+        order2.addDrink(drink2);
 
-    //     // Mock the kitchen behavior
-    //     Queue<Order> ordersQueue = new LinkedList<>(Arrays.asList(order));
-    //     when(kitchen.getOrders()).thenReturn(ordersQueue); // Add this line to provide the order queue
-    //     when(kitchen.getChefs()).thenReturn(Arrays.asList(chef));
-    //     when(kitchen.getBartenders()).thenReturn(Arrays.asList(bartender));
+        // Add orders to the kitchen
+        kitchen.placeOrder(order1);
+        kitchen.placeOrder(order2);
+    }
 
-    //     // Mock order details
-    //     when(order.getOrderTime()).thenReturn(System.currentTimeMillis());
-    //     when(order.getWaitingTime()).thenReturn(5000L);
-    //     when(order.getExpectedFinishTime()).thenReturn(System.currentTimeMillis() + 15000);
-    //     when(order.getFoods()).thenReturn(Arrays.asList(new Food("Pasta", 25, 20, 0)));
-    //     when(order.getDrinks()).thenReturn(Arrays.asList(new Drink("Cocktail", 20, 40, 0)));
+    @Test
+    void testExecuteWithOrders() throws InterruptedException {
+        // Capture the output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outputStream));
+
+        // Simulate user input for the scanner (pressing ENTER)
+        String simulatedInput = "\n";  // Simulates an Enter key press
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
         
-    //     // Mock chef activity
-    //     when(chef.getName()).thenReturn("Gordon");
-    //     when(chef.getCurrentFood()).thenReturn(new Food("Pasta", 25, 20, 0));
-    //     when(chef.getRemainingCookingTime()).thenReturn(10000L);
+        // Create a scanner for input
+        Scanner scanner = new Scanner(System.in);
 
-    //     // Mock bartender activity
-    //     when(bartender.getName()).thenReturn("Tom");
-    //     when(bartender.getCurrentDrink()).thenReturn(new Drink("Cocktail", 20, 40, 0));
-    //     when(bartender.getRemainingMixingTime()).thenReturn(5000L);
-    // }
+        // Execute the command
+        viewKitchenProcesses.execute(scanner, kitchen, new Config());
 
-    // @Test
-    // public void testExecute() {
-    //     // Create a scanner that simulates user input
-    //     Scanner scanner = new Scanner("e\n"); // The user will input 'e' to exit
-
-    //     // Execute the command
-    //     viewKitchenProcesses.execute(scanner, kitchen);
+        // Allow some time for the refresh thread to run
+        Thread.sleep(1500); // Sleep for a bit to allow the thread to display output
         
-    //     // Wait a bit to allow the thread to run
-    //     try {
-    //         Thread.sleep(1500); // Sleep for a short time to allow output
-    //     } catch (InterruptedException e) {
-    //         Thread.currentThread().interrupt();
-    //     }
+        // Restore the original System.out
+        System.setOut(originalOut);
+        System.setIn(System.in); // Restore original System.in
 
-    //     // Check the output
-    //     String output = outputStream.toString();
-    //     assertTrue(output.contains("Current Kitchen Processes"), "Output should contain 'Current Kitchen Processes'");
-    //     assertTrue(output.contains("Gordon"), "Output should contain chef name 'Gordon'"); // Corrected to true
-    //     assertTrue(output.contains("Tom"), "Output should contain bartender name 'Tom'");
-    //     assertTrue(output.contains("Pasta"), "Output should contain food item 'Pasta'");
-    //     assertTrue(output.contains("Cocktail"), "Output should contain drink item 'Cocktail'");
+        // Get the output as a String
+        String output = outputStream.toString();
+
+        // Assertions to verify the output
+        assertTrue(output.contains("View Kitchen Process List"));
+        assertTrue(output.contains("Pizza"));
+        assertTrue(output.contains("Burger"));
+        assertTrue(output.contains("Coke"));
+        assertTrue(output.contains("Sprite"));
+        assertTrue(output.contains("Press 'ENTER' to exit view..."));
+    }
+
+    @Test
+    void testExecuteWithNoOrders() throws InterruptedException {
+        // Clear orders from kitchen
+        kitchen.getOrders().clear();
+
+        // Capture the output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outputStream));
+
+        // Simulate user input for the scanner (pressing ENTER)
+        String simulatedInput = "\n";  // Simulates an Enter key press
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
         
-    //     // Clean up
-    //     scanner.close();
-    // }
+        // Create a scanner for input
+        Scanner scanner = new Scanner(System.in);
 
-    // @Test
-    // public void testDisplayCurrentOrderDetails() {
-    //     viewKitchenProcesses.displayCurrentOrderDetails(order);
-    //     String output = outputStream.toString();
-    //     assertTrue(output.contains("Current Order"), "Output should contain 'Current Order'");
-    //     assertTrue(output.contains("Pasta"), "Output should contain food item 'Pasta'");
-    //     assertTrue(output.contains("Cocktail"), "Output should contain drink item 'Cocktail'");
-    // }
+        // Execute the command
+        viewKitchenProcesses.execute(scanner, kitchen, new Config());
+
+        // Allow some time for the refresh thread to run
+        Thread.sleep(1500); // Sleep for a bit to allow the thread to display output
+        
+        // Restore the original System.out
+        System.setOut(originalOut);
+        System.setIn(System.in); // Restore original System.in
+
+        // Get the output as a String
+        String output = outputStream.toString();
+
+        // Assertions to verify the output
+        assertTrue(output.contains("View Kitchen Process List"));
+        assertTrue(output.contains("There is currently no order queued!"));
+        assertTrue(output.contains("Press 'ENTER' to exit view..."));
+    }
 }
