@@ -37,16 +37,17 @@ public class CreateReport extends Command {
 
         for (String itemName : kitchen.getHistoryItems().keySet()) {
             // Check for Food items
+            Integer count = kitchen.getHistoryItems().get(itemName);
             Food food = kitchen.getFood(itemName);
             if (food != null) {
-                totalProfit += food.getPrice();
-                totalFoodProfit += food.getPrice();
+                totalProfit += food.getPrice() * count;
+                totalFoodProfit += food.getPrice() * count;
             } else {
                 // Check for Drink items if Food is not found
                 Drink drink = kitchen.getDrink(itemName);
                 if (drink != null) {
-                    totalProfit += drink.getPrice();
-                    totalDrinkProfit += drink.getPrice();
+                    totalProfit += drink.getPrice() * count;
+                    totalDrinkProfit += drink.getPrice() * count;
                 }
             }
         }
