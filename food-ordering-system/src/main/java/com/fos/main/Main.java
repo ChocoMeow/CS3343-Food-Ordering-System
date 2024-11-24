@@ -43,7 +43,7 @@ public class Main {
 
         List<Command> commands = new ArrayList<>(commandFactory.getAllCommands());
         List<String> additionalCommands = List.of("Exit");
-
+ 
         while (true) {
             Utils.clearConsole();
             int choice = Utils.printMenu(scanner, commands, additionalCommands);
