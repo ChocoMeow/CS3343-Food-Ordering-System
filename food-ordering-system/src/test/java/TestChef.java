@@ -15,12 +15,13 @@ import com.fos.worker.Chef;
 public class TestChef  {
 
     private Chef chef;
-    private Food mockFood;
+    private Food mockFood,food;
 
     @BeforeEach
     public void setUp() {
         chef = new Chef("Gordon");
         mockFood = mock(Food.class);
+        food = new Food("Pasta", 12.0f, 5, 10);
     }
 
     @AfterEach
@@ -82,5 +83,35 @@ public class TestChef  {
     @Test
     public void testGetRemainingCookingTimeWhenNoFood() {
         assertEquals(0, chef.getRemainingCookingTime(), "Remaining time should be 0 when no food is being cooked");
+    }
+    @Test
+    public void testGetRemainingCookingTime_initial() throws InterruptedException {
+        chef.cook(food);
+        
+        // Immediately after starting cooking, remaining time should be close to cooking time
+        long remainingTime = chef.getRemainingCookingTime();
+        assertTrue(remainingTime <= 5 && remainingTime >= 4, "Remaining cooking time should be close to initial cooking time");
+    }
+
+    @Test
+    public void testGetRemainingCookingTime_after3Seconds() throws InterruptedException {
+        chef.cook(food);
+        
+        // Wait for 3 seconds to let some of the cooking time pass
+        Thread.sleep(3000);
+        
+        long remainingTime = chef.getRemainingCookingTime();
+        assertTrue(remainingTime <= 2 && remainingTime >= 1, "Remaining cooking time should be around 2 seconds after 3 seconds have passed");
+    }
+
+    @Test
+    public void testGetRemainingCookingTime_afterCookingCompleted() throws InterruptedException {
+        chef.cook(food);
+        
+        // Wait for the entire cooking time to pass
+        Thread.sleep(6000); // Adding a buffer to ensure cooking is completed
+        
+        long remainingTime = chef.getRemainingCookingTime();
+        assertEquals(0, remainingTime, "Remaining cooking time should be 0 after cooking is completed");
     }
 }
