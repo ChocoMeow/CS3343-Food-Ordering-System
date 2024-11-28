@@ -18,7 +18,7 @@ public class AddDrinkCommand extends Command {
         Map<String, Object> formReults = new HashMap<>();
         formReults.putAll(Utils.createInputField(scanner, "name", "Enter name for new drink item:", "String", true));
         formReults.putAll(Utils.createInputField(scanner, "price", "Enter price for new drink item:", "Float", true));
-        formReults.putAll(Utils.createInputField(scanner, "mixingTime", "Enter cooking time for new drink item (in seconds):", "Integer", true));
+        formReults.putAll(Utils.createInputField(scanner, "mixingTime", "Enter mixing time for new drink item (in seconds):", "Integer", true));
         formReults.putAll(Utils.createInputField(scanner, "stock", "Enter stock for new drink item:", "Integer", true));
 
         String name = (String) formReults.get("name");
