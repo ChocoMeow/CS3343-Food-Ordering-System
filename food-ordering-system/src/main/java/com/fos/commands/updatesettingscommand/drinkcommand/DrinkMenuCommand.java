@@ -27,8 +27,8 @@ public class DrinkMenuCommand extends Command {
         List<String> additionalCommands = List.of("Go Back");
 
         while (true) {
-            Utils.clearConsole();
             int choice = Utils.printMenu(scanner, commands, additionalCommands);
+            Utils.clearConsole();
 
             if (choice == commands.size() + 1) {
                 return;
