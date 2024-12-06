@@ -1,6 +1,7 @@
 # Real-Time Food Ordering System for Robotic Restaurant
 
 ## Overview
+![image](https://github.com/user-attachments/assets/709703c6-e9a4-4906-88d4-eafab591261a)
 
 The **Real-Time Food Ordering System for Robotic Restaurant** aims to enhance operational efficiency and customer experience through automation and real-time tracking. This project implements a queuing algorithm to optimize order processing and integrates real-time tracking features to keep customers informed. Thorough testing and evaluation of the system ensure usability and performance.
 
@@ -57,7 +58,7 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/real-time-food-ordering-system.git
+   git clone https://github.com/ChocoMeow/CS3343-Food-Ordering-System.git
    cd real-time-food-ordering-system
    ```
 
